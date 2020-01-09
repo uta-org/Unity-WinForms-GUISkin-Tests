@@ -1,7 +1,3 @@
 [submodule "Assets/Unity-WinForms"]
 	path = Assets/Unity-WinForms
 	url = https://github.com/Meragon/Unity-WinForms.git
-[submodule "Assets/uzLib.Lite"]
-	path = Assets/uzLib.Lite
-	url = https://github.com/uta-org/uzLib.Lite.git
-	branch = unity-1.2.0
