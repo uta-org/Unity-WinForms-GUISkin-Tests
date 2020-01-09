@@ -12,8 +12,10 @@ public class DrawExamples : MonoBehaviour
     {
         worker = new TextureWorker(32, 32)
             .Fill(Color.clear)
-            .Apply()
-            .DrawSector(16, new Range(0, 90), Color.red);
+            .CreateRoundedBorders(Color.red, 5)
+            .Apply();
+
+        // .DrawSector(16, new Range(0, 90), Color.red);
 
         // .DrawCircle(16, Color.red);
         // .Apply();

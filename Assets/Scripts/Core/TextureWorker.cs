@@ -5,6 +5,14 @@ using UnityEngine.SocialPlatforms;
 
 public sealed class TextureWorker
 {
+    internal enum Corner
+    {
+        UpLeft,
+        UpRight,
+        BottomLeft,
+        BottomRight
+    }
+
     private Texture2D MyTexture { get; }
 
     private TextureWorker()
@@ -46,6 +54,10 @@ public sealed class TextureWorker
         return this;
     }
 
+    // TODO: Create SmartFill
+    // TODO: DrawAnnulusSector
+    // TODO: DrawAnnulus
+
     public TextureWorker DrawSector(int radius, Range angles, Color color)
     {
         TextureUtils.DrawSector(MyTexture, radius, color, angles);
@@ -58,9 +70,26 @@ public sealed class TextureWorker
         return this;
     }
 
-    //public TextureWorker FillRoundedBorders(Color color, int borderRadius, Color? background = null)
-    //{
-    //}
+    // TODO: Rename from Fill to Create
+    public TextureWorker CreateRoundedBorders(Color color, int borderRadius, Color? background = null)
+    {
+        int w = MyTexture.width;
+        int h = MyTexture.height;
+        int r = borderRadius;
+
+        //TextureUtils.DrawSector(MyTexture, r, r, r, color, GetAngle(Corner.UpLeft), true, false);
+        //TextureUtils.DrawSector(MyTexture, w - r, r, r, color, GetAngle(Corner.UpRight), true, false);
+        //TextureUtils.DrawSector(MyTexture, r, h - r, r, color, GetAngle(Corner.BottomLeft), true, false);
+        //TextureUtils.DrawSector(MyTexture, w - r, h - r, r, color, GetAngle(Corner.BottomRight), true, false);
+
+        // TODO: Fix this
+        TextureUtils.DrawSector(MyTexture, r, r, r, Color.red, GetAngle(Corner.UpLeft), true, false);
+        TextureUtils.DrawSector(MyTexture, w - r, r, r, Color.green, GetAngle(Corner.UpRight), true, false);
+        TextureUtils.DrawSector(MyTexture, r, h - r, r, Color.blue, GetAngle(Corner.BottomLeft), true, false);
+        TextureUtils.DrawSector(MyTexture, w - r, h - r, r, Color.magenta, GetAngle(Corner.BottomRight), true, false);
+
+        return this;
+    }
 
     //public TextureWorker FillRoundedBorders(Color color, RectOffset borderOffsets, Color? background = null)
     //{
@@ -74,6 +103,7 @@ public sealed class TextureWorker
     //{
     //}
 
+    // TODO: Rename to ApplyBorders
     //public TextureWorker WithBorders(Color borderColor, int borderSize)
     //{
     //}
@@ -98,5 +128,25 @@ public sealed class TextureWorker
             MyTexture.Apply();
 
         return MyTexture;
+    }
+
+    private static Range GetAngle(Corner corner)
+    {
+        switch (corner)
+        {
+            case Corner.UpLeft:
+                return new Range(180, 270);
+
+            case Corner.UpRight:
+                return new Range(270, 0);
+
+            case Corner.BottomLeft:
+                return new Range(90, 180);
+
+            case Corner.BottomRight:
+                return new Range(0, 90);
+        }
+
+        return default;
     }
 }
