@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 
 public sealed class TextureWorker
 {
-    internal enum Corner
+    public enum Corner
     {
         UpLeft,
         UpRight,
@@ -13,7 +14,8 @@ public sealed class TextureWorker
         BottomRight
     }
 
-    private Texture2D MyTexture { get; }
+    public Texture2D Texture { get; }
+    public int DrawnPixels { get; private set; }
 
     private TextureWorker()
     {
@@ -21,35 +23,48 @@ public sealed class TextureWorker
 
     public TextureWorker(int width, int height)
     {
-        MyTexture = new Texture2D(width, height);
+        Texture = new Texture2D(width, height);
     }
 
     public TextureWorker Fill(Color color)
     {
-        for (int x = 0; x < MyTexture.width; x++)
-        {
-            for (int y = 0; y < MyTexture.height; y++)
-            {
-                MyTexture.SetPixel(x, y, color);
-            }
-        }
+        for (int x = 0; x < Texture.width; x++)
+            for (int y = 0; y < Texture.height; y++)
+                Texture.SetPixel(x, y, color);
 
         return this;
     }
 
     public TextureWorker Fill(Rect rect, Color color)
     {
-        for (int x = 0; x < MyTexture.width; x++)
-        {
-            for (int y = 0; y < MyTexture.height; y++)
+        for (int x = 0; x < Texture.width; x++)
+            for (int y = 0; y < Texture.height; y++)
             {
                 var pos = new Vector2(x, y);
                 if (rect.Contains(pos))
-                {
-                    MyTexture.SetPixel(x, y, color);
-                }
+                    Texture.SetPixel(x, y, color);
             }
-        }
+
+        return this;
+    }
+
+    public TextureWorker SmartFill(Rect rect, Color color)
+        => SmartFill((int)rect.xMin, (int)rect.xMax, (int)rect.yMin, (int)rect.yMax, color);
+
+    public TextureWorker SmartFill(int xMin, int xMax, int yMin, int yMax, Color color)
+    {
+        if (xMin >= xMax)
+            throw new ArgumentException("xMin >= xMax");
+
+        if (yMin >= yMax)
+            throw new ArgumentException("yMin >= yMax");
+
+        for (int x = xMin; x < xMax; x++)
+            for (int y = yMin; y < yMax; y++)
+            {
+                Texture.SetPixel(x, Texture.height - y - 1, color);
+                ++DrawnPixels;
+            }
 
         return this;
     }
@@ -60,33 +75,33 @@ public sealed class TextureWorker
 
     public TextureWorker DrawSector(int radius, Range angles, Color color)
     {
-        TextureUtils.DrawSector(MyTexture, radius, color, angles);
+        DrawnPixels += TextureUtils.DrawSector(Texture, radius, color, angles);
         return this;
     }
 
     public TextureWorker DrawCircle(int radius, Color color)
     {
-        TextureUtils.Polar(MyTexture, radius, radius, radius);
+        DrawnPixels += TextureUtils.Polar(Texture, radius, radius, radius);
         return this;
     }
 
-    // TODO: Rename from Fill to Create
     public TextureWorker CreateRoundedBorders(Color color, int borderRadius, Color? background = null)
     {
-        int w = MyTexture.width;
-        int h = MyTexture.height;
+        int w = Texture.width;
+        int h = Texture.height;
         int r = borderRadius;
 
-        //TextureUtils.DrawSector(MyTexture, r, r, r, color, GetAngle(Corner.UpLeft), true, false);
-        //TextureUtils.DrawSector(MyTexture, w - r, r, r, color, GetAngle(Corner.UpRight), true, false);
-        //TextureUtils.DrawSector(MyTexture, r, h - r, r, color, GetAngle(Corner.BottomLeft), true, false);
-        //TextureUtils.DrawSector(MyTexture, w - r, h - r, r, color, GetAngle(Corner.BottomRight), true, false);
+        DrawnPixels += TextureUtils.DrawSector(Texture, r, r, r, color, GetAngle(Corner.UpLeft), true, false);
+        DrawnPixels += TextureUtils.DrawSector(Texture, w - r, r, r, color, GetAngle(Corner.UpRight), true, false);
+        DrawnPixels += TextureUtils.DrawSector(Texture, r, h - r, r, color, GetAngle(Corner.BottomLeft), true, false);
+        DrawnPixels += TextureUtils.DrawSector(Texture, w - r, h - r, r, color, GetAngle(Corner.BottomRight), true, false);
 
-        // TODO: Fix this
-        TextureUtils.DrawSector(MyTexture, r, r, r, Color.red, GetAngle(Corner.UpLeft), true, false);
-        TextureUtils.DrawSector(MyTexture, w - r, r, r, Color.green, GetAngle(Corner.UpRight), true, false);
-        TextureUtils.DrawSector(MyTexture, r, h - r, r, Color.blue, GetAngle(Corner.BottomLeft), true, false);
-        TextureUtils.DrawSector(MyTexture, w - r, h - r, r, Color.magenta, GetAngle(Corner.BottomRight), true, false);
+        SmartFill(r, w - r, r, h - r, color);
+
+        SmartFill(r, w - r, 0, r, color);
+        SmartFill(0, r, r, h - r, color);
+        SmartFill(w - r, w, r - 1, h - r + 1, color);
+        SmartFill(r, w - r + 1, h - r, h, color);
 
         return this;
     }
@@ -118,19 +133,20 @@ public sealed class TextureWorker
 
     public TextureWorker Apply()
     {
-        MyTexture.Apply();
+        Texture.Apply();
         return this;
     }
 
+    [Obsolete]
     public Texture2D GetTexture(bool apply = false)
     {
         if (apply)
-            MyTexture.Apply();
+            Texture.Apply();
 
-        return MyTexture;
+        return Texture;
     }
 
-    private static Range GetAngle(Corner corner)
+    public static Range GetAngle(Corner corner)
     {
         switch (corner)
         {
@@ -138,7 +154,7 @@ public sealed class TextureWorker
                 return new Range(180, 270);
 
             case Corner.UpRight:
-                return new Range(270, 0);
+                return new Range(270, 360);
 
             case Corner.BottomLeft:
                 return new Range(90, 180);
