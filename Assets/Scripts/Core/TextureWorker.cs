@@ -48,8 +48,8 @@ public sealed class TextureWorker
         return this;
     }
 
-    public TextureWorker SmartFill(Rect rect, Color color)
-        => SmartFill((int)rect.xMin, (int)rect.xMax, (int)rect.yMin, (int)rect.yMax, color);
+    public TextureWorker SmartFill(RectInt rect, Color color)
+        => SmartFill(rect.xMin, rect.xMax, rect.yMin, rect.yMax, color);
 
     public TextureWorker SmartFill(int xMin, int xMax, int yMin, int yMax, Color color)
     {
@@ -106,9 +106,41 @@ public sealed class TextureWorker
         return this;
     }
 
-    //public TextureWorker FillRoundedBorders(Color color, RectOffset borderOffsets, Color? background = null)
-    //{
-    //}
+    public TextureWorker FillRoundedBorders(Color color, RectCorners corners, Color? background = null)
+    {
+        int w = Texture.width;
+        int h = Texture.height;
+
+        int r0 = corners.UpLeft;
+        int r1 = corners.UpRight;
+        int r2 = corners.BottomLeft;
+        int r3 = corners.BottomRight;
+
+        //new RectOffset(left, right, top, bottom)
+
+        if (r0 > 0)
+            DrawnPixels += TextureUtils.DrawSector(Texture, r0, r0, r0, color, GetAngle(Corner.UpLeft), true, false);
+
+        if (r1 > 0)
+            DrawnPixels += TextureUtils.DrawSector(Texture, w - r1, r1, r1, color, GetAngle(Corner.UpRight), true, false);
+
+        if (r2 > 0)
+            DrawnPixels += TextureUtils.DrawSector(Texture, r2, h - r2, r2, color, GetAngle(Corner.BottomLeft), true, false);
+
+        if (r3 > 0)
+            DrawnPixels += TextureUtils.DrawSector(Texture, w - r3, h - r3, r3, color, GetAngle(Corner.BottomRight), true, false);
+
+        SmartFill(r0, w - r1, r2, h - r3, color);
+
+        SmartFill(r0, w - r1, 0, Mathf.Max(r0, r1), color);
+        SmartFill(0, Mathf.Max(r0, r2), r0, h - r2, color);
+        SmartFill(w - Mathf.Max(r1, r3), w, r1 - 1, h - r3 + 1, color);
+        SmartFill(r2, w - r3 + 1, h - Mathf.Max(r2, r3), h, color);
+
+        return this;
+    }
+
+    // TODO: Create overload with xMin, xMax, yMin, yMax... Move code from above
 
     //public TextureWorker FillRoundedBorders(Rect rect, Color color, int borderRadius, Color? background = null)
     //{
