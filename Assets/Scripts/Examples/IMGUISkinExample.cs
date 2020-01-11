@@ -29,6 +29,6 @@ public class IMGUISkinExample : MonoBehaviour
     private void ExampleWindow(int id)
     {
         GUI.DragWindow();
-        GUILayout.Button("This is a test");
+        CustomGUILayout.Button("This is a test");
     }
 }

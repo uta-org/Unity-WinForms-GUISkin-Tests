@@ -54,24 +54,73 @@ public class SkinWorker : MonoBehaviour
 
         // TODO: Add regions
 
+        int buttonStyleIndex = (int)CustomGUILayout.CustomSyles.Button;
+
+        skin.customStyles[buttonStyleIndex] = skin.button;
+
         // Start Button
-        var buttonWorker = CreateWorker("ButtonStyle", 16, 16)
+        var buttonWorkerNormal = CreateWorker("ButtonStyleNormal", 16, 16)
             .SetBorders(SystemColors.ActiveBorder.ToUnityColor(), 1)
             .Fill(SystemColors.Control.ToUnityColor())
             .Apply();
 
-        skin.button.normal.background = buttonWorker.Texture;
-        skin.button.normal.textColor = control.ForeColor.ToUnityColor();
+        skin.customStyles[buttonStyleIndex].normal.background = buttonWorkerNormal.Texture;
+        skin.customStyles[buttonStyleIndex].normal.textColor = control.ForeColor.ToUnityColor();
+
+        //var buttonWorkerOnNormal = CreateWorker("ButtonStyleOnNormal", 16, 16)
+        //    .SetBorders(SystemColors.ActiveBorder.ToUnityColor(), 1)
+        //    .Fill(SystemColors.Control.ToUnityColor())
+        //    .Apply();
+
+        skin.customStyles[buttonStyleIndex].onNormal.background = buttonWorkerNormal.Texture;
+        skin.customStyles[buttonStyleIndex].onNormal.textColor = control.ForeColor.ToUnityColor();
+
+        var buttonWorkerHovered = CreateWorker("ButtonStyleHovered", 16, 16)
+            .SetBorders(SkinColors.BorderHoverColor, 1)
+            .Fill(SkinColors.HoverColor)
+            .Apply();
+
+        skin.customStyles[buttonStyleIndex].hover.background = buttonWorkerHovered.Texture;
+        skin.customStyles[buttonStyleIndex].hover.textColor = control.ForeColor.ToUnityColor();
+
+        //var buttonWorkerOnHovered = CreateWorker("ButtonStyleOnHovered", 16, 16)
+        //    .SetBorders(SystemColors.ActiveBorder.ToUnityColor(), 1)
+        //    .Fill(SystemColors.Control.ToUnityColor())
+        //    .Apply();
+
+        skin.customStyles[buttonStyleIndex].onHover.background = buttonWorkerHovered.Texture;
+        skin.customStyles[buttonStyleIndex].onHover.textColor = control.ForeColor.ToUnityColor();
+
+        var buttonWorkerActive = CreateWorker("ButtonStyleActive", 16, 16)
+            .SetBorders(SkinColors.BorderHoverColor, 1)
+            .Fill(SystemColors.Control.ToUnityColor())
+            .Apply();
+
+        skin.customStyles[buttonStyleIndex].onActive.background = buttonWorkerActive.Texture;
+        skin.customStyles[buttonStyleIndex].onActive.textColor = control.ForeColor.ToUnityColor();
+
+        skin.customStyles[buttonStyleIndex].onNormal.textColor = Color.red;
+        skin.customStyles[buttonStyleIndex].onActive.textColor = Color.green;
+        skin.customStyles[buttonStyleIndex].onHover.textColor = Color.blue;
+        skin.customStyles[buttonStyleIndex].onFocused.textColor = Color.yellow;
+
         // End Button
 
         // Start Window
         var windowWorker = CreateWorker("WindowStyle", 16, 16)
-            .Fill(Color.gray)
-            .SmartFill(new RectInt(0, 0, 16, 4), Color.black)
+            .SetBorders(SystemColors.ActiveBorder.ToUnityColor(), 1)
+            .Fill(SystemColors.Control.ToUnityColor())
+            // .SmartFill(new RectInt(0, 0, 16, 4), Color.black)
             .Apply();
 
         skin.window.normal.background = windowWorker.Texture;
-        // skin.window.border = new RectOffset();
+        skin.window.normal.textColor = control.ForeColor.ToUnityColor();
+
+        skin.window.onNormal.background = null;
+
+        // TODO: Fix this
+        //skin.window.border = new RectOffset();
+        //skin.window.padding = new RectOffset();
         // End Window
     }
 
@@ -92,4 +141,10 @@ public class SkinWorker : MonoBehaviour
 
         return worker;
     }
+}
+
+public static class SkinColors
+{
+    public static Color BorderHoverColor => new Color32(126, 180, 234, 255);
+    public static Color HoverColor => new Color32(223, 238, 252, 255);
 }
