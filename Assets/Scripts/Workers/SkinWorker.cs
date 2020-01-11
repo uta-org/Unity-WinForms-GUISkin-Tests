@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Unity.API;
 using UnityEditor;
 using UnityEngine;
 using Application = UnityEngine.Application;
@@ -25,7 +23,7 @@ public class SkinWorker : MonoBehaviour
     [MenuItem("Window/Get Builtin skin...")]
     public static void GetSkin()
     {
-        string dir = Path.Combine(Application.dataPath, "Saved Skins/");
+        string dir = Path.Combine(Application.dataPath, "Resources", "Saved Skins/");
 
         if (!Directory.Exists(dir))
             Directory.CreateDirectory(dir);
@@ -38,7 +36,7 @@ public class SkinWorker : MonoBehaviour
 
             string n = $"SceneSkin{es}.guiskin";
             enums.Add(n);
-            n = "Assets/Saved Skins/" + n;
+            n = "Assets/Resources/Saved Skins/" + n;
 
             AssetDatabase.CreateAsset(skin, n); //There should be an dialog to set the name!
         }
