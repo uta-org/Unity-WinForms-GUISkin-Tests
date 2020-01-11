@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.IO;
 using UnityEditor;
 
@@ -7,8 +8,9 @@ public static class DumpEditorTextures
     private const string AssetsFolder = "Assets";
     private const string TexturesDestFolderNamePro = "TexturesPro";
     private const string TexturesDestFolderNameNormal = "TexturesNormal";
-    private static readonly string TexturesDestPathPro = Path.Combine(AssetsFolder, TexturesDestFolderNamePro);
-    private static readonly string TexturesDestPathNormal = Path.Combine(AssetsFolder, TexturesDestFolderNameNormal);
+
+    private static string TexturesDestPathPro { get; } = Path.Combine(AssetsFolder, "{0}", TexturesDestFolderNamePro);
+    private static string TexturesDestPathNormal { get; } = Path.Combine(AssetsFolder, "{0}", TexturesDestFolderNameNormal);
 
     public class DumperWindow : EditorWindow
     {
@@ -24,34 +26,50 @@ public static class DumpEditorTextures
         {
             if (GUILayout.Button("Dump Textures"))
             {
-                CreateFolders();
-
                 DumpAllTextures();
                 AssetDatabase.Refresh();
             }
         }
 
-        private static void CreateFolders()
+        private static void CreateFolders(EditorSkin skin)
         {
-            if (!AssetDatabase.IsValidFolder(TexturesDestPathPro))
+            string skinName = Path.Combine("Resources", skin.ToString());
+            if (EditorGUIUtility.isProSkin)
             {
-                AssetDatabase.CreateFolder(AssetsFolder, TexturesDestFolderNamePro);
+                var proPath = string.Format(TexturesDestPathPro, skinName);
+                if (!AssetDatabase.IsValidFolder(proPath))
+                {
+                    Directory.CreateDirectory(Path.Combine(AssetsFolder, skinName, TexturesDestFolderNamePro));
+                    //AssetDatabase.CreateFolder(AssetsFolder, Path.Combine(skinName, TexturesDestFolderNamePro));
+                }
             }
-            if (!AssetDatabase.IsValidFolder(TexturesDestPathNormal))
+            else
             {
-                AssetDatabase.CreateFolder(AssetsFolder, TexturesDestFolderNameNormal);
+                var normalPath = string.Format(TexturesDestPathNormal, skinName);
+                if (!AssetDatabase.IsValidFolder(normalPath))
+                {
+                    Directory.CreateDirectory(Path.Combine(AssetsFolder, skinName, TexturesDestFolderNameNormal));
+                    //AssetDatabase.CreateFolder(AssetsFolder, Path.Combine(skinName, TexturesDestFolderNameNormal));
+                }
             }
         }
 
         private void DumpAllTextures()
         {
-            var path = EditorGUIUtility.isProSkin ? TexturesDestPathPro : TexturesDestPathNormal;
-
-            SaveDefaultStyleTextures(path);
-
-            foreach (var style in GUI.skin.customStyles)
+            Array values = Enum.GetValues(typeof(EditorSkin));
+            foreach (EditorSkin editorSkin in values)
             {
-                SaveStyleTextures(style, path);
+                var path = string.Format(EditorGUIUtility.isProSkin ? TexturesDestPathPro : TexturesDestPathNormal, Path.Combine("Resources", editorSkin.ToString()));
+
+                GUISkin skin = Instantiate(EditorGUIUtility.GetBuiltinSkin(editorSkin));
+
+                CreateFolders(editorSkin);
+                SaveDefaultStyleTextures(skin, path);
+
+                foreach (var style in skin.customStyles)
+                {
+                    SaveStyleTextures(style, path);
+                }
             }
         }
 
@@ -68,33 +86,33 @@ public static class DumpEditorTextures
             SaveTexture(style.onFocused.background, path);
         }
 
-        private void SaveDefaultStyleTextures(string path)
+        private void SaveDefaultStyleTextures(GUISkin skin, string path)
         {
-            SaveStyleTextures(GUI.skin.box, path);
-            SaveStyleTextures(GUI.skin.button, path);
-            SaveStyleTextures(GUI.skin.toggle, path);
-            SaveStyleTextures(GUI.skin.label, path);
-            SaveStyleTextures(GUI.skin.textArea, path);
-            SaveStyleTextures(GUI.skin.textField, path);
-            SaveStyleTextures(GUI.skin.window, path);
+            SaveStyleTextures(skin.box, path);
+            SaveStyleTextures(skin.button, path);
+            SaveStyleTextures(skin.toggle, path);
+            SaveStyleTextures(skin.label, path);
+            SaveStyleTextures(skin.textArea, path);
+            SaveStyleTextures(skin.textField, path);
+            SaveStyleTextures(skin.window, path);
 
-            SaveStyleTextures(GUI.skin.horizontalSlider, path);
-            SaveStyleTextures(GUI.skin.horizontalSliderThumb, path);
+            SaveStyleTextures(skin.horizontalSlider, path);
+            SaveStyleTextures(skin.horizontalSliderThumb, path);
 
-            SaveStyleTextures(GUI.skin.verticalSlider, path);
-            SaveStyleTextures(GUI.skin.verticalSliderThumb, path);
+            SaveStyleTextures(skin.verticalSlider, path);
+            SaveStyleTextures(skin.verticalSliderThumb, path);
 
-            SaveStyleTextures(GUI.skin.horizontalScrollbar, path);
-            SaveStyleTextures(GUI.skin.horizontalScrollbarThumb, path);
-            SaveStyleTextures(GUI.skin.horizontalScrollbarLeftButton, path);
-            SaveStyleTextures(GUI.skin.horizontalScrollbarRightButton, path);
+            SaveStyleTextures(skin.horizontalScrollbar, path);
+            SaveStyleTextures(skin.horizontalScrollbarThumb, path);
+            SaveStyleTextures(skin.horizontalScrollbarLeftButton, path);
+            SaveStyleTextures(skin.horizontalScrollbarRightButton, path);
 
-            SaveStyleTextures(GUI.skin.verticalScrollbar, path);
-            SaveStyleTextures(GUI.skin.verticalScrollbarThumb, path);
-            SaveStyleTextures(GUI.skin.verticalScrollbarUpButton, path);
-            SaveStyleTextures(GUI.skin.verticalScrollbarDownButton, path);
+            SaveStyleTextures(skin.verticalScrollbar, path);
+            SaveStyleTextures(skin.verticalScrollbarThumb, path);
+            SaveStyleTextures(skin.verticalScrollbarUpButton, path);
+            SaveStyleTextures(skin.verticalScrollbarDownButton, path);
 
-            SaveStyleTextures(GUI.skin.scrollView, path);
+            SaveStyleTextures(skin.scrollView, path);
         }
     }
 
