@@ -15,10 +15,12 @@ public class DrawExamples : MonoBehaviour
             .Apply();
 
         circleWorker = new TextureWorker(32, 32)
-            .Fill(Color.clear)
-            .Apply()
-            // .DrawCircle(16, Color.red);
-            .DrawSector(16, GetAngle(Corner.UpRight), Color.cyan);
+            .SetBorders(Color.black, 1)
+            .Fill(Color.red)
+            // .FillRoundedBorders(Color.blue, new RectCorners(5, 3, 7, 5))
+            .Apply();
+        // .DrawCircle(16, Color.red);
+        // .DrawSector(16, GetAngle(Corner.UpRight), Color.cyan);
         // .Apply();
         // .DrawSector(16, GetAngle(Corner.UpLeft), Color.cyan);
 

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 
@@ -17,6 +15,10 @@ public sealed class TextureWorker
     public Texture2D Texture { get; }
     public int DrawnPixels { get; private set; }
 
+    private RectCorners? Corners { get; set; }
+    private int? BorderSize { get; set; }
+    private Color? BorderColor { get; set; }
+
     private TextureWorker()
     {
     }
@@ -28,9 +30,40 @@ public sealed class TextureWorker
 
     public TextureWorker Fill(Color color)
     {
+        int h = Texture.height;
+
         for (int x = 0; x < Texture.width; x++)
             for (int y = 0; y < Texture.height; y++)
+            {
+                if (BorderColor.HasValue && BorderSize.HasValue)
+                {
+                    if (x < BorderSize)
+                    {
+                        Texture.SetPixel(x, y, BorderColor.Value);
+                        continue;
+                    }
+
+                    if (Texture.width - x <= BorderSize)
+                    {
+                        Texture.SetPixel(x, y, BorderColor.Value);
+                        continue;
+                    }
+
+                    if (y < BorderSize)
+                    {
+                        Texture.SetPixel(x, h - y - 1, BorderColor.Value);
+                        continue;
+                    }
+
+                    if (h - y - 1 < BorderSize)
+                    {
+                        Texture.SetPixel(x, h - y - 1, BorderColor.Value);
+                        continue;
+                    }
+                }
+
                 Texture.SetPixel(x, y, color);
+            }
 
         return this;
     }
@@ -69,10 +102,10 @@ public sealed class TextureWorker
         return this;
     }
 
-    // TODO: Create SmartFill
     // TODO: DrawAnnulusSector
     // TODO: DrawAnnulus
 
+    // Test methods
     public TextureWorker DrawSector(int radius, Range angles, Color color)
     {
         DrawnPixels += TextureUtils.DrawSector(Texture, radius, color, angles);
@@ -102,6 +135,8 @@ public sealed class TextureWorker
         SmartFill(0, r, r, h - r, color);
         SmartFill(w - r, w, r - 1, h - r + 1, color);
         SmartFill(r, w - r + 1, h - r, h, color);
+
+        Corners = new RectCorners(borderRadius, borderRadius, borderRadius, borderRadius);
 
         return this;
     }
@@ -137,6 +172,8 @@ public sealed class TextureWorker
         SmartFill(w - Mathf.Max(r1, r3), w, r1 - 1, h - r3 + 1, color);
         SmartFill(r2, w - r3 + 1, h - Mathf.Max(r2, r3), h, color);
 
+        Corners = corners;
+
         return this;
     }
 
@@ -150,16 +187,31 @@ public sealed class TextureWorker
     //{
     //}
 
-    // TODO: Rename to ApplyBorders
-    //public TextureWorker WithBorders(Color borderColor, int borderSize)
+    /// <summary>
+    /// Set the borders (this must be called before Fill method).
+    /// </summary>
+    /// <param name="borderColor"></param>
+    /// <param name="borderSize"></param>
+    /// <returns></returns>
+    public TextureWorker SetBorders(Color borderColor, int borderSize)
+    {
+        if (!Corners.HasValue)
+        {
+            BorderColor = borderColor;
+            BorderSize = borderSize;
+
+            return this;
+        }
+
+        // TODO: Do then rounded borders
+        return this;
+    }
+
+    //public TextureWorker SetBorders(Color borderColor, RectOffset borderOffsets)
     //{
     //}
 
-    //public TextureWorker WithBorders(Color borderColor, RectOffset borderOffsets)
-    //{
-    //}
-
-    //public TextureWorker WithBorders(Color rightBorderColor, Color upBorderColor, Color rightBorderColor, Color bottomBorderColor, RectOffset borderOffsets)
+    //public TextureWorker SetBorders(Color rightBorderColor, Color upBorderColor, Color rightBorderColor, Color bottomBorderColor, RectOffset borderOffsets)
     //{
     //}
 

@@ -413,6 +413,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1752895406}
+  - component: {fileID: 1752895407}
   - component: {fileID: 1752895405}
   m_Layer: 0
   m_Name: IMGUI
@@ -433,7 +434,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c81982bc5e244b4ebe4efd7c3d4feee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skin: {fileID: 11400000, guid: af680f0b0f0b8db46b5d1595cb3b3f7f, type: 2}
 --- !u!4 &1752895406
 Transform:
   m_ObjectHideFlags: 0
@@ -448,3 +448,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1752895407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752895404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c87100a39b0f2446a4198f161223a99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skin: {fileID: 11400000, guid: fb3c48a8491ba414eaefa878e232f907, type: 2}

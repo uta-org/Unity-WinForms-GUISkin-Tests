@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class IMGUISkinExample : MonoBehaviour
 {
-    [SerializeField]
-    private GUISkin skin;
+    //[SerializeField]
+    //private GUISkin skin;
 
     private Rect windowPos;
 
@@ -22,7 +22,7 @@ public class IMGUISkinExample : MonoBehaviour
 
     private void OnGUI()
     {
-        GUI.skin = skin;
+        GUI.skin = SkinWorker.MySkin;
         windowPos = GUI.Window(0, windowPos, ExampleWindow, "Title");
     }
 
