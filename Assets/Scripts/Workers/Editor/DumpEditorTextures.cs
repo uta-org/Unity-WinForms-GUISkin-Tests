@@ -8,112 +8,88 @@ public static class DumpEditorTextures
     private const string AssetsFolder = "Assets";
     private const string TexturesDestFolderNamePro = "TexturesPro";
     private const string TexturesDestFolderNameNormal = "TexturesNormal";
+    private const string ResourcesSubfolder = "Resources/Dumped Textures";
 
     private static string TexturesDestPathPro { get; } = Path.Combine(AssetsFolder, "{0}", TexturesDestFolderNamePro);
     private static string TexturesDestPathNormal { get; } = Path.Combine(AssetsFolder, "{0}", TexturesDestFolderNameNormal);
 
-    public class DumperWindow : EditorWindow
+    private static void CreateFolders(EditorSkin skin)
     {
-        [MenuItem("Window/Editor Textures Dumper")]
-        private static void Init()
+        string skinName = Path.Combine(ResourcesSubfolder, skin.ToString());
+        if (EditorGUIUtility.isProSkin)
         {
-            // Get existing open window or if none, make a new one:
-            DumperWindow window = (DumperWindow)GetWindow(typeof(DumperWindow));
-            window.Show();
+            var proPath = string.Format(TexturesDestPathPro, skinName);
+            if (!AssetDatabase.IsValidFolder(proPath))
+                Directory.CreateDirectory(Path.Combine(AssetsFolder, skinName, TexturesDestFolderNamePro));
         }
-
-        private void OnGUI()
+        else
         {
-            if (GUILayout.Button("Dump Textures"))
+            var normalPath = string.Format(TexturesDestPathNormal, skinName);
+            if (!AssetDatabase.IsValidFolder(normalPath))
+                Directory.CreateDirectory(Path.Combine(AssetsFolder, skinName, TexturesDestFolderNameNormal));
+        }
+    }
+
+    [MenuItem("Window/Dump all EditorSkin textures...")]
+    private static void DumpAllTextures()
+    {
+        Array values = Enum.GetValues(typeof(EditorSkin));
+        foreach (EditorSkin editorSkin in values)
+        {
+            var path = string.Format(EditorGUIUtility.isProSkin ? TexturesDestPathPro : TexturesDestPathNormal, Path.Combine(ResourcesSubfolder, editorSkin.ToString()));
+
+            GUISkin skin = UnityEngine.Object.Instantiate(EditorGUIUtility.GetBuiltinSkin(editorSkin));
+
+            CreateFolders(editorSkin);
+            SaveDefaultStyleTextures(skin, path);
+
+            foreach (var style in skin.customStyles)
             {
-                DumpAllTextures();
-                AssetDatabase.Refresh();
+                SaveStyleTextures(style, path);
             }
         }
+    }
 
-        private static void CreateFolders(EditorSkin skin)
-        {
-            string skinName = Path.Combine("Resources", skin.ToString());
-            if (EditorGUIUtility.isProSkin)
-            {
-                var proPath = string.Format(TexturesDestPathPro, skinName);
-                if (!AssetDatabase.IsValidFolder(proPath))
-                {
-                    Directory.CreateDirectory(Path.Combine(AssetsFolder, skinName, TexturesDestFolderNamePro));
-                    //AssetDatabase.CreateFolder(AssetsFolder, Path.Combine(skinName, TexturesDestFolderNamePro));
-                }
-            }
-            else
-            {
-                var normalPath = string.Format(TexturesDestPathNormal, skinName);
-                if (!AssetDatabase.IsValidFolder(normalPath))
-                {
-                    Directory.CreateDirectory(Path.Combine(AssetsFolder, skinName, TexturesDestFolderNameNormal));
-                    //AssetDatabase.CreateFolder(AssetsFolder, Path.Combine(skinName, TexturesDestFolderNameNormal));
-                }
-            }
-        }
+    private static void SaveStyleTextures(GUIStyle style, string path)
+    {
+        SaveTexture(style.normal.background, path);
+        SaveTexture(style.hover.background, path);
+        SaveTexture(style.active.background, path);
+        SaveTexture(style.focused.background, path);
 
-        private void DumpAllTextures()
-        {
-            Array values = Enum.GetValues(typeof(EditorSkin));
-            foreach (EditorSkin editorSkin in values)
-            {
-                var path = string.Format(EditorGUIUtility.isProSkin ? TexturesDestPathPro : TexturesDestPathNormal, Path.Combine("Resources", editorSkin.ToString()));
+        SaveTexture(style.onNormal.background, path);
+        SaveTexture(style.onHover.background, path);
+        SaveTexture(style.onActive.background, path);
+        SaveTexture(style.onFocused.background, path);
+    }
 
-                GUISkin skin = Instantiate(EditorGUIUtility.GetBuiltinSkin(editorSkin));
+    private static void SaveDefaultStyleTextures(GUISkin skin, string path)
+    {
+        SaveStyleTextures(skin.box, path);
+        SaveStyleTextures(skin.button, path);
+        SaveStyleTextures(skin.toggle, path);
+        SaveStyleTextures(skin.label, path);
+        SaveStyleTextures(skin.textArea, path);
+        SaveStyleTextures(skin.textField, path);
+        SaveStyleTextures(skin.window, path);
 
-                CreateFolders(editorSkin);
-                SaveDefaultStyleTextures(skin, path);
+        SaveStyleTextures(skin.horizontalSlider, path);
+        SaveStyleTextures(skin.horizontalSliderThumb, path);
 
-                foreach (var style in skin.customStyles)
-                {
-                    SaveStyleTextures(style, path);
-                }
-            }
-        }
+        SaveStyleTextures(skin.verticalSlider, path);
+        SaveStyleTextures(skin.verticalSliderThumb, path);
 
-        private static void SaveStyleTextures(GUIStyle style, string path)
-        {
-            SaveTexture(style.normal.background, path);
-            SaveTexture(style.hover.background, path);
-            SaveTexture(style.active.background, path);
-            SaveTexture(style.focused.background, path);
+        SaveStyleTextures(skin.horizontalScrollbar, path);
+        SaveStyleTextures(skin.horizontalScrollbarThumb, path);
+        SaveStyleTextures(skin.horizontalScrollbarLeftButton, path);
+        SaveStyleTextures(skin.horizontalScrollbarRightButton, path);
 
-            SaveTexture(style.onNormal.background, path);
-            SaveTexture(style.onHover.background, path);
-            SaveTexture(style.onActive.background, path);
-            SaveTexture(style.onFocused.background, path);
-        }
+        SaveStyleTextures(skin.verticalScrollbar, path);
+        SaveStyleTextures(skin.verticalScrollbarThumb, path);
+        SaveStyleTextures(skin.verticalScrollbarUpButton, path);
+        SaveStyleTextures(skin.verticalScrollbarDownButton, path);
 
-        private void SaveDefaultStyleTextures(GUISkin skin, string path)
-        {
-            SaveStyleTextures(skin.box, path);
-            SaveStyleTextures(skin.button, path);
-            SaveStyleTextures(skin.toggle, path);
-            SaveStyleTextures(skin.label, path);
-            SaveStyleTextures(skin.textArea, path);
-            SaveStyleTextures(skin.textField, path);
-            SaveStyleTextures(skin.window, path);
-
-            SaveStyleTextures(skin.horizontalSlider, path);
-            SaveStyleTextures(skin.horizontalSliderThumb, path);
-
-            SaveStyleTextures(skin.verticalSlider, path);
-            SaveStyleTextures(skin.verticalSliderThumb, path);
-
-            SaveStyleTextures(skin.horizontalScrollbar, path);
-            SaveStyleTextures(skin.horizontalScrollbarThumb, path);
-            SaveStyleTextures(skin.horizontalScrollbarLeftButton, path);
-            SaveStyleTextures(skin.horizontalScrollbarRightButton, path);
-
-            SaveStyleTextures(skin.verticalScrollbar, path);
-            SaveStyleTextures(skin.verticalScrollbarThumb, path);
-            SaveStyleTextures(skin.verticalScrollbarUpButton, path);
-            SaveStyleTextures(skin.verticalScrollbarDownButton, path);
-
-            SaveStyleTextures(skin.scrollView, path);
-        }
+        SaveStyleTextures(skin.scrollView, path);
     }
 
     // Credits: https://support.unity3d.com/hc/en-us/articles/206486626-How-can-I-get-pixels-from-unreadable-textures-
