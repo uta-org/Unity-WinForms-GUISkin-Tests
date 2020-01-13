@@ -7,7 +7,6 @@ using Unity.API;
 using UnityEditor;
 using UnityEngine;
 using Application = UnityEngine.Application;
-using Color = UnityEngine.Color;
 
 public class SkinWorker : MonoBehaviour
 {
@@ -54,57 +53,33 @@ public class SkinWorker : MonoBehaviour
 
         // TODO: Add regions
 
-        int buttonStyleIndex = (int)CustomGUILayout.CustomSyles.Button;
+        int buttonDisabledStyleIndex = (int)CustomGUILayout.CustomSyles.ButtonDisabled;
+        int buttonEnabledStyleIndex = (int)CustomGUILayout.CustomSyles.ButtonEnabled;
 
-        skin.customStyles[buttonStyleIndex] = skin.button;
+        skin.customStyles[buttonDisabledStyleIndex] = skin.button;
+        skin.customStyles[buttonEnabledStyleIndex] = skin.button;
 
-        // Start Button
-        var buttonWorkerNormal = CreateWorker("ButtonStyleNormal", 16, 16)
+        // Start Button disabled
+        var buttonDisabledWorkerNormal = CreateWorker("ButtonDisabledStyleNormal", 16, 16)
             .SetBorders(SystemColors.ActiveBorder.ToUnityColor(), 1)
             .Fill(SystemColors.Control.ToUnityColor())
             .Apply();
 
-        skin.customStyles[buttonStyleIndex].normal.background = buttonWorkerNormal.Texture;
-        skin.customStyles[buttonStyleIndex].normal.textColor = control.ForeColor.ToUnityColor();
+        skin.customStyles[buttonDisabledStyleIndex].normal.background = buttonDisabledWorkerNormal.Texture;
+        skin.customStyles[buttonDisabledStyleIndex].normal.textColor = control.ForeColor.ToUnityColor();
 
-        //var buttonWorkerOnNormal = CreateWorker("ButtonStyleOnNormal", 16, 16)
-        //    .SetBorders(SystemColors.ActiveBorder.ToUnityColor(), 1)
-        //    .Fill(SystemColors.Control.ToUnityColor())
-        //    .Apply();
+        // End Button disabled
 
-        skin.customStyles[buttonStyleIndex].onNormal.background = buttonWorkerNormal.Texture;
-        skin.customStyles[buttonStyleIndex].onNormal.textColor = control.ForeColor.ToUnityColor();
-
-        var buttonWorkerHovered = CreateWorker("ButtonStyleHovered", 16, 16)
+        // Start Button enabled
+        var buttonEnabledWorkerNormal = CreateWorker("ButtonEnabledStyleNormal", 16, 16)
             .SetBorders(SkinColors.BorderHoverColor, 1)
             .Fill(SkinColors.HoverColor)
             .Apply();
 
-        skin.customStyles[buttonStyleIndex].hover.background = buttonWorkerHovered.Texture;
-        skin.customStyles[buttonStyleIndex].hover.textColor = control.ForeColor.ToUnityColor();
+        skin.customStyles[buttonEnabledStyleIndex].normal.background = buttonEnabledWorkerNormal.Texture;
+        skin.customStyles[buttonEnabledStyleIndex].normal.textColor = control.ForeColor.ToUnityColor();
 
-        //var buttonWorkerOnHovered = CreateWorker("ButtonStyleOnHovered", 16, 16)
-        //    .SetBorders(SystemColors.ActiveBorder.ToUnityColor(), 1)
-        //    .Fill(SystemColors.Control.ToUnityColor())
-        //    .Apply();
-
-        skin.customStyles[buttonStyleIndex].onHover.background = buttonWorkerHovered.Texture;
-        skin.customStyles[buttonStyleIndex].onHover.textColor = control.ForeColor.ToUnityColor();
-
-        var buttonWorkerActive = CreateWorker("ButtonStyleActive", 16, 16)
-            .SetBorders(SkinColors.BorderHoverColor, 1)
-            .Fill(SystemColors.Control.ToUnityColor())
-            .Apply();
-
-        skin.customStyles[buttonStyleIndex].onActive.background = buttonWorkerActive.Texture;
-        skin.customStyles[buttonStyleIndex].onActive.textColor = control.ForeColor.ToUnityColor();
-
-        skin.customStyles[buttonStyleIndex].onNormal.textColor = Color.red;
-        skin.customStyles[buttonStyleIndex].onActive.textColor = Color.green;
-        skin.customStyles[buttonStyleIndex].onHover.textColor = Color.blue;
-        skin.customStyles[buttonStyleIndex].onFocused.textColor = Color.yellow;
-
-        // End Button
+        // End Button enabled
 
         // Start Window
         var windowWorker = CreateWorker("WindowStyle", 16, 16)
@@ -141,10 +116,4 @@ public class SkinWorker : MonoBehaviour
 
         return worker;
     }
-}
-
-public static class SkinColors
-{
-    public static Color BorderHoverColor => new Color32(126, 180, 234, 255);
-    public static Color HoverColor => new Color32(223, 238, 252, 255);
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class IMGUISkinExample : MonoBehaviour
 {
+    private CustomGUILayout customUI;
+
     //[SerializeField]
     //private GUISkin skin;
 
@@ -13,6 +15,7 @@ public class IMGUISkinExample : MonoBehaviour
     private void Start()
     {
         windowPos = new Rect(0, 0, 200, 200);
+        customUI = new CustomGUILayout(SkinWorker.MySkin);
     }
 
     // Update is called once per frame
@@ -29,6 +32,6 @@ public class IMGUISkinExample : MonoBehaviour
     private void ExampleWindow(int id)
     {
         GUI.DragWindow();
-        CustomGUILayout.Button("This is a test");
+        customUI.Button("This is a test");
     }
 }

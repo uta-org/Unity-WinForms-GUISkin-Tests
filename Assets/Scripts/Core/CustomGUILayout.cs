@@ -2,38 +2,46 @@
 using System.Diagnostics.Eventing.Reader;
 using UnityEngine;
 
-public static class CustomGUILayout
+public class CustomGUILayout
 {
-    private static HashSet<string> ToggledButtons = new HashSet<string>();
+    private CustomGUILayout()
+    {
+    }
+
+    public CustomGUILayout(GUISkin skin)
+    {
+        Skin = skin;
+    }
+
+    private GUISkin Skin { get; }
+
+    private bool IsToggled;
 
     public enum CustomSyles
     {
-        Button
+        ButtonDisabled,
+        ButtonEnabled
     }
 
     // TODO: Uniq identifier
-    public static bool Button(string text)
+    public bool Button(string text)
     {
-        GUI.skin = SkinWorker.MySkin;
-
         // TODO: Rect
-        GUILayout.Toggle(ToggledButtons.Contains(text), text);
-        //GUILayout.Toggle(ToggledButtons.Contains(text), text, GUI.skin.customStyles[(int)CustomSyles.Button]);
-        var r = GUILayoutUtility.GetLastRect();
-        Debug.Log(r); // TODO
-
-        bool clicked = false;
+        var @return = GUILayout.Button(text,
+            !IsToggled
+                ? Skin.customStyles[(int)CustomSyles.ButtonDisabled]
+                : Skin.customStyles[(int)CustomSyles.ButtonEnabled]);
         Event e = Event.current;
-        if (r.Contains(e.mousePosition) && e.type == EventType.MouseDown)
+
+        if (@return)
         {
-            ToggledButtons.Add(text);
-            clicked = true;
+            IsToggled = true;
         }
-        else if (!r.Contains(e.mousePosition) && e.type == EventType.MouseDown)
+        else if (IsToggled && e.type == EventType.MouseDown)
         {
-            ToggledButtons.Remove(text);
+            IsToggled = false;
         }
 
-        return clicked;
+        return @return;
     }
 }

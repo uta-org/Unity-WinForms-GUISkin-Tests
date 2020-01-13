@@ -17,17 +17,7 @@ public class DrawExamples : MonoBehaviour
         circleWorker = new TextureWorker(32, 32)
             .SetBorders(Color.black, 1)
             .Fill(Color.red)
-            // .FillRoundedBorders(Color.blue, new RectCorners(5, 3, 7, 5))
             .Apply();
-        // .DrawCircle(16, Color.red);
-        // .DrawSector(16, GetAngle(Corner.UpRight), Color.cyan);
-        // .Apply();
-        // .DrawSector(16, GetAngle(Corner.UpLeft), Color.cyan);
-
-        // .DrawSector(16, new Range(0, 90), Color.red);
-
-        // .DrawCircle(16, Color.red);
-        // .Apply();
     }
 
     // Update is called once per frame
