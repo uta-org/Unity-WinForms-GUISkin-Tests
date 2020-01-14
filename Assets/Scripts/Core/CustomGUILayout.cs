@@ -15,7 +15,7 @@ public class CustomGUILayout
 
     private GUISkin Skin { get; }
 
-    private bool IsToggled;
+    private bool IsToggled { get; set; }
 
     public enum CustomSyles
     {
@@ -31,16 +31,13 @@ public class CustomGUILayout
             !IsToggled
                 ? Skin.customStyles[(int)CustomSyles.ButtonDisabled]
                 : Skin.customStyles[(int)CustomSyles.ButtonEnabled]);
+
         Event e = Event.current;
 
-        if (@return)
-        {
-            IsToggled = true;
-        }
-        else if (IsToggled && e.type == EventType.MouseDown)
-        {
-            IsToggled = false;
-        }
+        if (e.type == EventType.Used)
+            IsToggled = @return;
+
+        Debug.Log($"{IsToggled} | {@return} | {e.type}");
 
         return @return;
     }

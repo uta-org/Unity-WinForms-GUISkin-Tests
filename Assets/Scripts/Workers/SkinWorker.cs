@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Unity.API;
 using UnityEditor;
@@ -56,11 +57,22 @@ public class SkinWorker : MonoBehaviour
         int buttonDisabledStyleIndex = (int)CustomGUILayout.CustomSyles.ButtonDisabled;
         int buttonEnabledStyleIndex = (int)CustomGUILayout.CustomSyles.ButtonEnabled;
 
-        skin.customStyles[buttonDisabledStyleIndex] = skin.button;
-        skin.customStyles[buttonEnabledStyleIndex] = skin.button;
+        //Debug.Log(buttonDisabledStyleIndex);
+        //Debug.Log(buttonEnabledStyleIndex);
+
+        Debug.Log($"Custom styles length = {skin.customStyles.Length} ({string.Join(", ", skin.customStyles.Select(style => style.name))})");
+
+        var copy = new GUIStyle[skin.customStyles.Length];
+        Array.Copy(skin.customStyles, copy, skin.customStyles.Length);
+
+        int enumLength = Enum.GetNames(typeof(CustomGUILayout.CustomSyles)).Length;
+        skin.customStyles = new GUIStyle[enumLength + skin.customStyles.Length];
+
+        //skin.customStyles[buttonDisabledStyleIndex] = skin.button;
+        //skin.customStyles[buttonEnabledStyleIndex] = skin.button;
 
         // Start Button disabled
-        var buttonDisabledWorkerNormal = CreateWorker("ButtonDisabledStyleNormal", 16, 16)
+        var buttonDisabledWorkerNormal = CreateWorker(CreateStyle(buttonDisabledStyleIndex, skin.button), 16, 16)
             .SetBorders(SystemColors.ActiveBorder.ToUnityColor(), 1)
             .Fill(SystemColors.Control.ToUnityColor())
             .Apply();
@@ -71,7 +83,7 @@ public class SkinWorker : MonoBehaviour
         // End Button disabled
 
         // Start Button enabled
-        var buttonEnabledWorkerNormal = CreateWorker("ButtonEnabledStyleNormal", 16, 16)
+        var buttonEnabledWorkerNormal = CreateWorker(CreateStyle(buttonEnabledStyleIndex, skin.button), 16, 16)
             .SetBorders(SkinColors.BorderHoverColor, 1)
             .Fill(SkinColors.HoverColor)
             .Apply();
@@ -80,6 +92,14 @@ public class SkinWorker : MonoBehaviour
         skin.customStyles[buttonEnabledStyleIndex].normal.textColor = control.ForeColor.ToUnityColor();
 
         // End Button enabled
+
+        // Start Common styles
+
+        skin.customStyles[buttonDisabledStyleIndex].hover = skin.customStyles[buttonDisabledStyleIndex].normal;
+        skin.customStyles[buttonDisabledStyleIndex].onNormal = skin.customStyles[buttonDisabledStyleIndex].normal;
+        skin.customStyles[buttonDisabledStyleIndex].active = skin.customStyles[buttonDisabledStyleIndex].normal;
+
+        // End Common styles
 
         // Start Window
         var windowWorker = CreateWorker("WindowStyle", 16, 16)
@@ -97,6 +117,10 @@ public class SkinWorker : MonoBehaviour
         //skin.window.border = new RectOffset();
         //skin.window.padding = new RectOffset();
         // End Window
+
+        InsertAt(skin.customStyles, enumLength, copy);
+
+        Debug.Log($"Custom styles length = {skin.customStyles.Length} ({string.Join(", ", skin.customStyles.Select(style => style.name))})");
     }
 
     // Start is called before the first frame update
@@ -115,5 +139,29 @@ public class SkinWorker : MonoBehaviour
         Workers.Add(name, worker);
 
         return worker;
+    }
+
+    private static void InsertAt<T>(T[] array, int index, T[] subArray)
+    {
+        if (index + subArray.Length > array.Length)
+            throw new ArgumentException($"subArray length cannot be grater than array. ({index} + {subArray.Length} > {array.Length})");
+
+        for (int i = index; i < index + subArray.Length; i++)
+        {
+            array[i] = subArray[i - index];
+        }
+    }
+
+    private static string CreateStyle(int index, GUIStyle other)
+    {
+        string name = ((CustomGUILayout.CustomSyles)index).ToString();
+        // Debug.Log($"{index}; {name}");
+
+        MySkin.customStyles[index] = new GUIStyle(other)
+        {
+            name = name
+        };
+
+        return name;
     }
 }
