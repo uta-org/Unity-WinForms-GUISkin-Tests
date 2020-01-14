@@ -57,19 +57,13 @@ public class SkinWorker : MonoBehaviour
         int buttonDisabledStyleIndex = (int)CustomGUILayout.CustomSyles.ButtonDisabled;
         int buttonEnabledStyleIndex = (int)CustomGUILayout.CustomSyles.ButtonEnabled;
 
-        //Debug.Log(buttonDisabledStyleIndex);
-        //Debug.Log(buttonEnabledStyleIndex);
-
-        Debug.Log($"Custom styles length = {skin.customStyles.Length} ({string.Join(", ", skin.customStyles.Select(style => style.name))})");
+        // Debug.Log($"Custom styles length = {skin.customStyles.Length} ({string.Join(", ", skin.customStyles.Select(style => style.name))})");
 
         var copy = new GUIStyle[skin.customStyles.Length];
         Array.Copy(skin.customStyles, copy, skin.customStyles.Length);
 
         int enumLength = Enum.GetNames(typeof(CustomGUILayout.CustomSyles)).Length;
         skin.customStyles = new GUIStyle[enumLength + skin.customStyles.Length];
-
-        //skin.customStyles[buttonDisabledStyleIndex] = skin.button;
-        //skin.customStyles[buttonEnabledStyleIndex] = skin.button;
 
         // Start Button disabled
         var buttonDisabledWorkerNormal = CreateWorker(CreateStyle(buttonDisabledStyleIndex, skin.button), 16, 16)
@@ -120,11 +114,12 @@ public class SkinWorker : MonoBehaviour
         // TODO: Fix this
         //skin.window.border = new RectOffset();
         //skin.window.padding = new RectOffset();
+
         // End Window
 
         InsertAt(skin.customStyles, enumLength, copy);
 
-        Debug.Log($"Custom styles length = {skin.customStyles.Length} ({string.Join(", ", skin.customStyles.Select(style => style.name))})");
+        // Debug.Log($"Custom styles length = {skin.customStyles.Length} ({string.Join(", ", skin.customStyles.Select(style => style.name))})");
     }
 
     // Start is called before the first frame update

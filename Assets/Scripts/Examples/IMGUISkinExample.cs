@@ -25,9 +25,6 @@ public class IMGUISkinExample : MonoBehaviour
 
     private void OnGUI()
     {
-        //if (GUILayout.Button("Hi 2!"))
-        //    Debug.Log("Click 2!");
-
         GUI.skin = SkinWorker.MySkin;
         windowPos = GUI.Window(0, windowPos, ExampleWindow, "Title");
     }
@@ -36,10 +33,6 @@ public class IMGUISkinExample : MonoBehaviour
     {
         // bugfix: Rect must be specified
         GUI.DragWindow(new Rect(0, 0, windowPos.size.x, 20));
-        //if (GUILayout.Button("Hi!"))
-        //{
-        //    Debug.Log("Click!");
-        //}
 
         if (customUI.Button("This is a test"))
         {
