@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CustomGUILayout
 {
@@ -27,15 +25,20 @@ public class CustomGUILayout
     public bool Button(string text)
     {
         // TODO: Rect
-        var @return = GUILayout.Button(text,
+        bool @return = GUILayout.Button(text,
             !IsToggled
                 ? Skin.customStyles[(int)CustomSyles.ButtonDisabled]
                 : Skin.customStyles[(int)CustomSyles.ButtonEnabled]);
 
+        if (@return)
+        {
+            IsToggled = true;
+        }
+
         Event e = Event.current;
 
-        if (e.type == EventType.Used)
-            IsToggled = @return;
+        //if (e.type == EventType.Used)
+        //    IsToggled = @return;
 
         Debug.Log($"{IsToggled} | {@return} | {e.type}");
 

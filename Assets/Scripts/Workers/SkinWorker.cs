@@ -99,6 +99,10 @@ public class SkinWorker : MonoBehaviour
         skin.customStyles[buttonDisabledStyleIndex].onNormal = skin.customStyles[buttonDisabledStyleIndex].normal;
         skin.customStyles[buttonDisabledStyleIndex].active = skin.customStyles[buttonDisabledStyleIndex].normal;
 
+        skin.customStyles[buttonEnabledStyleIndex].hover = skin.customStyles[buttonEnabledStyleIndex].normal;
+        skin.customStyles[buttonEnabledStyleIndex].onNormal = skin.customStyles[buttonEnabledStyleIndex].normal;
+        skin.customStyles[buttonEnabledStyleIndex].active = skin.customStyles[buttonEnabledStyleIndex].normal;
+
         // End Common styles
 
         // Start Window
