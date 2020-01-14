@@ -31,9 +31,7 @@ public class CustomGUILayout
                 : Skin.customStyles[(int)CustomSyles.ButtonEnabled]);
 
         if (@return)
-        {
             IsToggled = true;
-        }
 
         Event e = Event.current;
         if (e.type == EventType.MouseUp && IsToggled && !@return)

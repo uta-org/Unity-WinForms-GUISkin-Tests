@@ -30,19 +30,19 @@ public class SkinWorker : MonoBehaviour
             Directory.CreateDirectory(dir);
 
         List<string> enums = new List<string>();
-        Array vals = Enum.GetValues(typeof(EditorSkin));
-        foreach (EditorSkin es in vals)
+        Array values = Enum.GetValues(typeof(EditorSkin));
+        foreach (EditorSkin es in values)
         {
             GUISkin skin = Instantiate(EditorGUIUtility.GetBuiltinSkin(es));
 
-            string n = $"SceneSkin{es}.guiskin";
-            enums.Add(n);
-            n = "Assets/Resources/Saved Skins/" + n;
+            string name = $"SceneSkin{es}.guiskin";
+            enums.Add(name);
+            name = "Assets/Resources/Saved Skins/" + name;
 
-            AssetDatabase.CreateAsset(skin, n); //There should be an dialog to set the name!
+            AssetDatabase.CreateAsset(skin, name);
         }
         EditorUtility.DisplayDialog("API Message",
-            $"GUI Skin saved in 'Saved Skins' folder all {vals.Length} scripts with names: ({string.Join(", ", enums.ToArray())})!", "Ok");
+            $"GUI Skin saved in 'Saved Skins' folder all {values.Length} scripts with names: ({string.Join(", ", enums.ToArray())})!", "Ok");
     }
 
     private void Awake()
