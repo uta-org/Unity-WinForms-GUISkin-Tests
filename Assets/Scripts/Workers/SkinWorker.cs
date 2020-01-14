@@ -11,6 +11,14 @@ using Application = UnityEngine.Application;
 
 public class SkinWorker : MonoBehaviour
 {
+    internal enum UIState
+    {
+        Normal,
+        Hover,
+        Active,
+        Focused
+    }
+
     public static SkinWorker Instance { get; private set; }
     public static GUISkin MySkin => Instance.skin;
 
@@ -74,12 +82,21 @@ public class SkinWorker : MonoBehaviour
         skin.customStyles[buttonDisabledStyleIndex].normal.background = buttonDisabledWorkerNormal.Texture;
         skin.customStyles[buttonDisabledStyleIndex].normal.textColor = control.ForeColor.ToUnityColor();
 
+        var buttonDisabledWorkerHover = CreateWorker(GetName(CustomGUILayout.CustomSyles.ButtonDisabled, UIState.Hover), 16, 16)
+            .SetBorders(SkinColors.BorderHoverColor, 1)
+            .Fill(SkinColors.HoverColor)
+            .Apply();
+
+        skin.customStyles[buttonDisabledStyleIndex].hover.background = buttonDisabledWorkerHover.Texture;
+        skin.customStyles[buttonDisabledStyleIndex].hover.textColor = control.ForeColor.ToUnityColor();
+
         // End Button disabled
 
         // Start Button enabled
+
         var buttonEnabledWorkerNormal = CreateWorker(CreateStyle(buttonEnabledStyleIndex, skin.button), 16, 16)
             .SetBorders(SkinColors.BorderHoverColor, 1)
-            .Fill(SkinColors.HoverColor)
+            .Fill(SystemColors.Control.ToUnityColor())
             .Apply();
 
         skin.customStyles[buttonEnabledStyleIndex].normal.background = buttonEnabledWorkerNormal.Texture;
@@ -89,9 +106,8 @@ public class SkinWorker : MonoBehaviour
 
         // Start Common styles
 
-        skin.customStyles[buttonDisabledStyleIndex].hover = skin.customStyles[buttonDisabledStyleIndex].normal;
         skin.customStyles[buttonDisabledStyleIndex].onNormal = skin.customStyles[buttonDisabledStyleIndex].normal;
-        skin.customStyles[buttonDisabledStyleIndex].active = skin.customStyles[buttonDisabledStyleIndex].normal;
+        skin.customStyles[buttonDisabledStyleIndex].active = skin.customStyles[buttonDisabledStyleIndex].hover;
 
         skin.customStyles[buttonEnabledStyleIndex].hover = skin.customStyles[buttonEnabledStyleIndex].normal;
         skin.customStyles[buttonEnabledStyleIndex].onNormal = skin.customStyles[buttonEnabledStyleIndex].normal;
@@ -151,13 +167,18 @@ public class SkinWorker : MonoBehaviour
         }
     }
 
+    private static string GetName(CustomGUILayout.CustomSyles customStyle, UIState state)
+        => $"{customStyle}_{state}";
+
     private static string CreateStyle(int index, GUIStyle other)
+    // , UIState? state = null)
     {
         string name = ((CustomGUILayout.CustomSyles)index).ToString();
         // Debug.Log($"{index}; {name}");
 
         MySkin.customStyles[index] = new GUIStyle(other)
         {
+            // name = state.HasValue ? $"{name}_{state.Value}" : name
             name = name
         };
 

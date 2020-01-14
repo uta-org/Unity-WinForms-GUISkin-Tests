@@ -14,6 +14,7 @@ public class CustomGUILayout
     private GUISkin Skin { get; }
 
     private bool IsToggled { get; set; }
+    private Rect buttonRect { get; set; }
 
     public enum CustomSyles
     {
@@ -24,16 +25,20 @@ public class CustomGUILayout
     // TODO: Uniq identifier
     public bool Button(string text)
     {
-        // TODO: Rect
+        Event e = Event.current;
+        bool isHover = buttonRect.Contains(e.mousePosition);
+
         bool @return = GUILayout.Button(text,
-            !IsToggled
+            !IsToggled || isHover
                 ? Skin.customStyles[(int)CustomSyles.ButtonDisabled]
                 : Skin.customStyles[(int)CustomSyles.ButtonEnabled]);
+
+        if (e.type == EventType.Repaint)
+            buttonRect = GUILayoutUtility.GetLastRect();
 
         if (@return)
             IsToggled = true;
 
-        Event e = Event.current;
         if (e.type == EventType.MouseUp && IsToggled && !@return)
             IsToggled = false;
 
