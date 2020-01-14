@@ -36,11 +36,8 @@ public class CustomGUILayout
         }
 
         Event e = Event.current;
-
-        //if (e.type == EventType.Used)
-        //    IsToggled = @return;
-
-        Debug.Log($"{IsToggled} | {@return} | {e.type}");
+        if (e.type == EventType.MouseUp && IsToggled && !@return)
+            IsToggled = false;
 
         return @return;
     }
