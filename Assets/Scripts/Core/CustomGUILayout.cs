@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class CustomGUILayout
 {
@@ -13,8 +14,12 @@ public class CustomGUILayout
 
     private GUISkin Skin { get; }
 
-    private bool IsToggled { get; set; }
+    private Dictionary<int, bool> IsToggled { get; } = new Dictionary<int, bool>();
     private Rect buttonRect { get; set; }
+    private int InternalCounter { get; set; }
+
+    private EventType LastEvent { get; set; } = EventType.Layout;
+    //private int MaxCount { get; set; }
 
     public enum CustomSyles
     {
@@ -22,25 +27,54 @@ public class CustomGUILayout
         ButtonEnabled
     }
 
+    private int InternalCount()
+    {
+        // TODO: Button counter gets resetted on click, so I can't control which buttons get's active
+        Event e = Event.current;
+        var currentType = e.type;
+
+        bool isCountable = true; // currentType == EventType.Repaint || currentType == EventType.Layout;
+        int count = isCountable ? InternalCounter++ : InternalCounter;
+
+        if (currentType != LastEvent && isCountable)
+        {
+            InternalCounter = 0;
+            count = 0;
+        }
+
+        LastEvent = currentType;
+        return count;
+    }
+
     // TODO: Uniq identifier
-    public bool Button(string text)
+    public bool Button(string text, params GUILayoutOption[] options)
     {
         Event e = Event.current;
+
+        int count = InternalCount();
+        // Debug.Log($"Type: {e.type}; {count}");
+
+        bool contains = IsToggled.ContainsKey(count);
+        bool isToggled = contains && IsToggled[count];
+
+        if (!contains)
+            IsToggled.Add(count, false);
+
         bool isHover = buttonRect.Contains(e.mousePosition);
 
         bool @return = GUILayout.Button(text,
-            !IsToggled || isHover
+            !isToggled || isHover
                 ? Skin.customStyles[(int)CustomSyles.ButtonDisabled]
-                : Skin.customStyles[(int)CustomSyles.ButtonEnabled]);
+                : Skin.customStyles[(int)CustomSyles.ButtonEnabled], options);
 
         if (e.type == EventType.Repaint)
             buttonRect = GUILayoutUtility.GetLastRect();
 
         if (@return)
-            IsToggled = true;
+            IsToggled[count] = true;
 
-        if (e.type == EventType.MouseUp && IsToggled && !@return)
-            IsToggled = false;
+        if (e.type == EventType.MouseUp && isToggled && !@return)
+            IsToggled[count] = false;
 
         return @return;
     }

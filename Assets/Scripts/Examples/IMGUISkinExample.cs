@@ -38,5 +38,14 @@ public class IMGUISkinExample : MonoBehaviour
         {
             //Debug.Log("Clicked!");
         }
+
+        GUILayout.BeginScrollView(default);
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                customUI.Button(i.ToString());
+            }
+        }
+        GUILayout.EndScrollView();
     }
 }

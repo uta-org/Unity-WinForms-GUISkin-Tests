@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using Unity.API;
 using UnityEditor;
@@ -20,9 +19,14 @@ public class SkinWorker : MonoBehaviour
     }
 
     public static SkinWorker Instance { get; private set; }
+
+    // TODO: Method to create a new GUISkin instance
     public static GUISkin MySkin => Instance.skin;
 
     private static Dictionary<string, TextureWorker> Workers { get; } = new Dictionary<string, TextureWorker>();
+
+    [SerializeField]
+    private Unity.API.UnityWinForms winForms;
 
     [SerializeField]
     private GUISkin skin;
@@ -109,13 +113,16 @@ public class SkinWorker : MonoBehaviour
         skin.customStyles[buttonDisabledStyleIndex].onNormal = skin.customStyles[buttonDisabledStyleIndex].normal;
         skin.customStyles[buttonDisabledStyleIndex].active = skin.customStyles[buttonDisabledStyleIndex].hover;
 
-        skin.customStyles[buttonEnabledStyleIndex].hover = skin.customStyles[buttonEnabledStyleIndex].normal;
+        // TODO: This is not working on UILayout
+        skin.customStyles[buttonEnabledStyleIndex].hover = skin.customStyles[buttonDisabledStyleIndex].hover;
+
         skin.customStyles[buttonEnabledStyleIndex].onNormal = skin.customStyles[buttonEnabledStyleIndex].normal;
         skin.customStyles[buttonEnabledStyleIndex].active = skin.customStyles[buttonEnabledStyleIndex].normal;
 
         // End Common styles
 
         // Start Window
+
         var windowWorker = CreateWorker("WindowStyle", 16, 16)
             .SetBorders(SystemColors.ActiveBorder.ToUnityColor(), 1)
             .Fill(SystemColors.Control.ToUnityColor())
@@ -132,6 +139,80 @@ public class SkinWorker : MonoBehaviour
         //skin.window.padding = new RectOffset();
 
         // End Window
+
+        // Start Box
+
+        var boxWorker = CreateWorker("BoxNormal", 16, 16)
+            .SetBorders(SystemColors.ActiveBorder.ToUnityColor(), 1)
+            .Fill(UnityEngine.Color.clear)
+            .Apply();
+
+        skin.box.normal.background = boxWorker.Texture;
+        skin.box.normal.textColor = control.ForeColor.ToUnityColor();
+
+        // End Box
+
+        // Start HScrollBar
+
+        // HScrollBar
+
+        var hScrollBarWorker = CreateWorker("HScrollBarNormal", 16, 16)
+            .Fill(SystemColors.Control.ToUnityColor())
+            .Apply();
+
+        skin.horizontalScrollbar.normal.background = hScrollBarWorker.Texture;
+
+        // HScrollBar Left Button
+        skin.horizontalScrollbarLeftButton.normal.background = winForms.Resources.Images.ArrowLeft;
+
+        // HScrollBar Right Button
+        skin.horizontalScrollbarRightButton.normal.background = winForms.Resources.Images.ArrowRight;
+
+        // HScrollSlider
+        var hScrollSliderNormalWorker = CreateWorker("HScrollSliderNormal", 16, 16)
+            .Fill(SystemColors.ScrollBar.ToUnityColor())
+            .Apply();
+
+        skin.horizontalScrollbarThumb.normal.background = hScrollSliderNormalWorker.Texture;
+
+        var hScrollSliderHoverWorker = CreateWorker("HScrollSliderHover", 16, 16)
+            .Fill(SkinColors.ScrollHoverColor)
+            .Apply();
+
+        skin.horizontalSlider.hover.background = hScrollSliderHoverWorker.Texture;
+
+        // End HScrollBar
+
+        // Start HScrollBar
+
+        // HScrollBar
+
+        var vScrollBarWorker = CreateWorker("VScrollBarNormal", 16, 16)
+            .Fill(SystemColors.Control.ToUnityColor())
+            .Apply();
+
+        skin.verticalScrollbar.normal.background = vScrollBarWorker.Texture;
+
+        // VScrollBar Up Button
+        skin.verticalScrollbarUpButton.normal.background = winForms.Resources.Images.ArrowUp;
+
+        // VScrollBar Down Button
+        skin.verticalScrollbarDownButton.normal.background = winForms.Resources.Images.ArrowDown;
+
+        // VScrollSlider
+        var vScrollSliderNormalWorker = CreateWorker("VScrollSliderNormal", 16, 16)
+            .Fill(SystemColors.ScrollBar.ToUnityColor())
+            .Apply();
+
+        skin.verticalScrollbarThumb.normal.background = vScrollSliderNormalWorker.Texture;
+
+        var vScrollSliderHoverWorker = CreateWorker("VScrollSliderHover", 16, 16)
+            .Fill(SkinColors.ScrollHoverColor)
+            .Apply();
+
+        skin.verticalSlider.hover.background = vScrollSliderHoverWorker.Texture;
+
+        // End VScrollBar
 
         InsertAt(skin.customStyles, enumLength, copy);
 
@@ -183,5 +264,18 @@ public class SkinWorker : MonoBehaviour
         };
 
         return name;
+    }
+
+    public void SetLabelTextColor(UnityEngine.Color textColor)
+        => SetTextColor("label", textColor);
+
+    public void SetTextColor(string styleName, UnityEngine.Color textColor)
+    {
+        skin.GetStyle(styleName).normal.textColor = textColor;
+    }
+
+    public GUIStyle GetCustomStyle(CustomGUILayout.CustomSyles customStyle)
+    {
+        return skin.customStyles[(int)customStyle];
     }
 }
