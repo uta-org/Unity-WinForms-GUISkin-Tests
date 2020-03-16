@@ -6,24 +6,27 @@ using UnityEngine;
 using UnityWinForms.Examples;
 using Screen = UnityEngine.Screen;
 
-public class UnityFormExample : MonoBehaviour
+namespace uzLib.Lite.ExternalCode.WinFormsSkins.Examples
 {
-    public static Material s_chartGradient;
-    public Material ChartGradient;
-
-    private void Start()
+    public class UnityFormExample : MonoBehaviour
     {
-        s_chartGradient = ChartGradient;
+        public static Material s_chartGradient;
+        public Material ChartGradient;
 
-        var form = new FormExamples();
-        form.Shown += Form_OnShown;
+        private void Start()
+        {
+            s_chartGradient = ChartGradient;
 
-        form.Show();
-    }
+            var form = new FormExamples();
+            form.Shown += Form_OnShown;
 
-    private void Form_OnShown(object sender, EventArgs e)
-    {
-        var form = sender as Form;
-        form.Location = new Point(Screen.width - form.Size.Width - 5, Screen.height - form.Size.Height - 5);
+            form.Show();
+        }
+
+        private void Form_OnShown(object sender, EventArgs e)
+        {
+            var form = sender as Form;
+            form.Location = new Point(Screen.width - form.Size.Width - 5, Screen.height - form.Size.Height - 5);
+        }
     }
 }

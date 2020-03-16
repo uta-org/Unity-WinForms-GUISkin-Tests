@@ -1,15 +1,18 @@
-﻿public struct RectCorners
+﻿namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 {
-    public int UpLeft { get; set; }
-    public int UpRight { get; set; }
-    public int BottomLeft { get; set; }
-    public int BottomRight { get; set; }
-
-    public RectCorners(int upLeft, int upRight, int bottomLeft, int bottomRight)
+    public struct RectCorners
     {
-        UpLeft = upLeft;
-        UpRight = upRight;
-        BottomLeft = bottomLeft;
-        BottomRight = bottomRight;
+        public int UpLeft { get; set; }
+        public int UpRight { get; set; }
+        public int BottomLeft { get; set; }
+        public int BottomRight { get; set; }
+
+        public RectCorners(int upLeft, int upRight, int bottomLeft, int bottomRight)
+        {
+            UpLeft = upLeft;
+            UpRight = upRight;
+            BottomLeft = bottomLeft;
+            BottomRight = bottomRight;
+        }
     }
 }

@@ -1,51 +1,54 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using uzLib.Lite.ExternalCode.WinFormsSkins.Core;
+using uzLib.Lite.ExternalCode.WinFormsSkins.Workers;
 
-public class IMGUISkinExample : MonoBehaviour
+namespace uzLib.Lite.ExternalCode.WinFormsSkins.Examples
 {
-    private CustomGUILayout customUI;
-
-    //[SerializeField]
-    //private GUISkin skin;
-
-    private Rect windowPos;
-
-    // Start is called before the first frame update
-    private void Start()
+    public class IMGUISkinExample : MonoBehaviour
     {
-        windowPos = new Rect(0, 0, 200, 200);
-        customUI = new CustomGUILayout(SkinWorker.MySkin);
-    }
+        private CustomGUILayout customUI;
 
-    // Update is called once per frame
-    private void Update()
-    {
-    }
+        //[SerializeField]
+        //private GUISkin skin;
 
-    private void OnGUI()
-    {
-        GUI.skin = SkinWorker.MySkin;
-        windowPos = GUI.Window(0, windowPos, ExampleWindow, "Title");
-    }
+        private Rect windowPos;
 
-    private void ExampleWindow(int id)
-    {
-        // bugfix: Rect must be specified
-        GUI.DragWindow(new Rect(0, 0, windowPos.size.x, 20));
-
-        if (customUI.Button("This is a test"))
+        // Start is called before the first frame update
+        private void Start()
         {
-            //Debug.Log("Clicked!");
+            windowPos = new Rect(0, 0, 200, 200);
+            customUI = new CustomGUILayout(SkinWorker.MySkin);
         }
 
-        GUILayout.BeginScrollView(default);
+        // Update is called once per frame
+        private void Update()
         {
-            for (int i = 0; i < 10; i++)
+        }
+
+        private void OnGUI()
+        {
+            GUI.skin = SkinWorker.MySkin;
+            windowPos = GUI.Window(0, windowPos, ExampleWindow, "Title");
+        }
+
+        private void ExampleWindow(int id)
+        {
+            // bugfix: Rect must be specified
+            GUI.DragWindow(new Rect(0, 0, windowPos.size.x, 20));
+
+            if (customUI.Button("This is a test"))
             {
-                customUI.Button(i.ToString());
+                //Debug.Log("Clicked!");
             }
+
+            GUILayout.BeginScrollView(default);
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    customUI.Button(i.ToString());
+                }
+            }
+            GUILayout.EndScrollView();
         }
-        GUILayout.EndScrollView();
     }
 }
