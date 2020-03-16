@@ -38,6 +38,9 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
 
         private Control control = new Control();
 
+        public static GUIStyle TextFieldStyle =>
+            Instance.skin.customStyles[(int)CustomGUILayout.CustomSyles.TextField];
+
         [MenuItem("Window/Get Builtin skin...")]
         public static void GetSkin()
         {
@@ -232,6 +235,47 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
             skin.customStyles[tooltipIndex].normal.textColor = UnityEngine.Color.black;
 
             // End Tooltip
+
+            // Start TextField
+
+            /*
+
+                BackColor = SystemColors.Window;
+                uwfBorderColor = SystemColors.ActiveBorder;
+                uwfBorderFocusedColor = Color.FromArgb(86, 157, 229);
+                uwfBorderHoverColor = Color.FromArgb(126, 180, 234);
+
+             */
+
+            int textFieldIndex = (int)CustomGUILayout.CustomSyles.TextField;
+
+            var textFieldNormalWorker = CreateWorker(CreateStyle(textFieldIndex, skin.textField), 16, 16)
+                .SetBorders(SystemColors.ActiveBorder.ToUnityColor(), 1)
+                .Fill(SystemColors.Window.ToUnityColor())
+                .Apply();
+
+            skin.customStyles[textFieldIndex].normal.background = textFieldNormalWorker.Texture;
+            skin.customStyles[textFieldIndex].normal.textColor = control.ForeColor.ToUnityColor();
+
+            // GetName(CustomGUILayout.CustomSyles.ButtonDisabled, UIState.Hover)
+
+            var textFieldHoverWorker = CreateWorker(GetName(CustomGUILayout.CustomSyles.TextField, UIState.Hover), 16, 16)
+                .SetBorders(new Color32(126, 180, 234, 255), 1)
+                .Fill(SystemColors.Window.ToUnityColor())
+                .Apply();
+
+            skin.customStyles[textFieldIndex].hover.background = textFieldHoverWorker.Texture;
+            skin.customStyles[textFieldIndex].hover.textColor = control.ForeColor.ToUnityColor();
+
+            var textFieldFocusedWorker = CreateWorker(GetName(CustomGUILayout.CustomSyles.TextField, UIState.Focused), 16, 16)
+                .SetBorders(new Color32(126, 180, 234, 255), 1)
+                .Fill(SystemColors.Window.ToUnityColor())
+                .Apply();
+
+            skin.customStyles[textFieldIndex].focused.background = textFieldFocusedWorker.Texture;
+            skin.customStyles[textFieldIndex].focused.textColor = control.ForeColor.ToUnityColor();
+
+            // End TextField
 
             InsertAt(skin.customStyles, enumLength, copy);
 

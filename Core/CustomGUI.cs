@@ -48,6 +48,10 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
             if (transformStyle == null)
                 throw new ArgumentNullException(nameof(transformStyle));
 
+#if UNITY_EDITOR
+            return GUI.Button(rect, content, transformStyle(null));
+#else
+
             Event e = Event.current;
 
             int count = InternalCount();
@@ -75,6 +79,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
                 IsToggled[count] = false;
 
             return @return;
+#endif
         }
     }
 }

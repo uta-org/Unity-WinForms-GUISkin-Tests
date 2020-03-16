@@ -1,11 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unity_WinForms_Premium.CommonCore;
 using UnityEngine;
+
+#if !UNITY_2020 && !UNITY_2019 && !UNITY_2018 && !UNITY_2017 && !UNITY_5
+
+using Unity_WinForms_Premium.CommonCore;
+
+#else
+
+using uzLib.Lite.Core;
+
+#endif
 
 namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 {
-    public class CustomGUILayout : Singleton<CustomGUILayout>
+    public class CustomGUILayout
     {
         private CustomGUILayout()
         {
@@ -31,7 +40,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
         {
             ButtonDisabled,
             ButtonEnabled,
-            Tooltip
+            Tooltip,
+            TextField
         }
 
         private int InternalCount()
@@ -56,6 +66,10 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
         // TODO: Uniq identifier
         public bool Button(string text, params GUILayoutOption[] options)
         {
+#if UNITY_EDITOR
+            return GUILayout.Button(text, options);
+#else
+
             Event e = Event.current;
 
             int count = InternalCount();
@@ -84,12 +98,17 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
                 IsToggled[count] = false;
 
             return @return;
+#endif
         }
 
         public bool Button(string text, Func<GUIStyle, GUIStyle> transformStyle, params GUILayoutOption[] options)
         {
             if (transformStyle == null)
                 throw new ArgumentNullException(nameof(transformStyle));
+
+#if UNITY_EDITOR
+            return GUILayout.Button(text, transformStyle(null), options);
+#else
 
             Event e = Event.current;
 
@@ -119,6 +138,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
                 IsToggled[count] = false;
 
             return @return;
+#endif
         }
     }
 }
