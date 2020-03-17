@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using uzLib.Lite.ExternalCode.Unity.Utils;
 
 #if !UNITY_2020 && !UNITY_2019 && !UNITY_2018 && !UNITY_2017 && !UNITY_5
 
@@ -36,6 +37,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
         public GUIStyle PaginationStyle => Skin.customStyles[(int)CustomSyles.ButtonEnabled];
         // new GUIStyle("button") { normal = GUI.skin.button.active };
 
+        public static bool IsEditor => !ScenePlaybackDetector.IsPlaying;
+
         public enum CustomSyles
         {
             ButtonDisabled,
@@ -66,9 +69,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
         // TODO: Uniq identifier
         public bool Button(string text, params GUILayoutOption[] options)
         {
-#if UNITY_EDITOR
-            return GUILayout.Button(text, options);
-#else
+            if (IsEditor)
+                return GUILayout.Button(text, options);
 
             Event e = Event.current;
 
@@ -98,7 +100,6 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
                 IsToggled[count] = false;
 
             return @return;
-#endif
         }
 
         public bool Button(string text, Func<GUIStyle, GUIStyle> transformStyle, params GUILayoutOption[] options)
@@ -106,9 +107,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
             if (transformStyle == null)
                 throw new ArgumentNullException(nameof(transformStyle));
 
-#if UNITY_EDITOR
-            return GUILayout.Button(text, transformStyle(null), options);
-#else
+            if (IsEditor)
+                return GUILayout.Button(text, transformStyle(null), options);
 
             Event e = Event.current;
 
@@ -138,7 +138,6 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
                 IsToggled[count] = false;
 
             return @return;
-#endif
         }
     }
 }

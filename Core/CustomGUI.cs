@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using uzLib.Lite.ExternalCode.Unity.Utils;
 
 namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 {
@@ -23,6 +24,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 
         private EventType LastEvent { get; set; } = EventType.Layout;
         //private int MaxCount { get; set; }
+
+        public static bool IsEditor => !ScenePlaybackDetector.IsPlaying;
 
         private int InternalCount()
         {
@@ -48,9 +51,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
             if (transformStyle == null)
                 throw new ArgumentNullException(nameof(transformStyle));
 
-#if UNITY_EDITOR
-            return GUI.Button(rect, content, transformStyle(null));
-#else
+            if (IsEditor)
+                return GUI.Button(rect, content, transformStyle(null));
 
             Event e = Event.current;
 
@@ -79,7 +81,6 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
                 IsToggled[count] = false;
 
             return @return;
-#endif
         }
     }
 }
