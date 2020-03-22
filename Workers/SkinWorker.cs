@@ -44,7 +44,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
         private Control control = new Control();
 
         public static GUIStyle TextFieldStyle =>
-            Instance.skin.customStyles[(int)CustomGUILayout.CustomSyles.TextField];
+            Instance.skin.customStyles[(int)CustomGUIUtility.CustomStyles.TextField];
 
         [MenuItem("Window/Get Builtin skin...")]
         public static void GetSkin()
@@ -80,15 +80,15 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
 
             // TODO: Add regions
 
-            int buttonDisabledStyleIndex = (int)CustomGUILayout.CustomSyles.ButtonDisabled;
-            int buttonEnabledStyleIndex = (int)CustomGUILayout.CustomSyles.ButtonEnabled;
+            int buttonDisabledStyleIndex = (int)CustomGUIUtility.CustomStyles.ButtonDisabled;
+            int buttonEnabledStyleIndex = (int)CustomGUIUtility.CustomStyles.ButtonEnabled;
 
             // Debug.Log($"Custom styles length = {skin.customStyles.Length} ({string.Join(", ", skin.customStyles.Select(style => style.name))})");
 
             var copy = new GUIStyle[skin.customStyles.Length];
             Array.Copy(skin.customStyles, copy, skin.customStyles.Length);
 
-            int enumLength = Enum.GetNames(typeof(CustomGUILayout.CustomSyles)).Length;
+            int enumLength = Enum.GetNames(typeof(CustomGUIUtility.CustomStyles)).Length;
             skin.customStyles = new GUIStyle[enumLength + skin.customStyles.Length];
 
             // Start Button disabled
@@ -100,7 +100,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
             skin.customStyles[buttonDisabledStyleIndex].normal.background = buttonDisabledWorkerNormal.Texture;
             skin.customStyles[buttonDisabledStyleIndex].normal.textColor = control.ForeColor.ToUnityColor();
 
-            var buttonDisabledWorkerHover = CreateWorker(GetName(CustomGUILayout.CustomSyles.ButtonDisabled, UIState.Hover), 16, 16)
+            var buttonDisabledWorkerHover = CreateWorker(GetName(CustomGUIUtility.CustomStyles.ButtonDisabled, UIState.Hover), 16, 16)
                 .SetBorders(SkinColors.BorderHoverColor, 1)
                 .Fill(SkinColors.HoverColor)
                 .Apply();
@@ -230,7 +230,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
 
             // Start Tooltip
 
-            int tooltipIndex = (int)CustomGUILayout.CustomSyles.Tooltip;
+            int tooltipIndex = (int)CustomGUIUtility.CustomStyles.Tooltip;
 
             var tooltipWorker = CreateWorker(CreateStyle(tooltipIndex, skin.box), 16, 16)
                 .SetBorders(SystemColors.ActiveBorder.ToUnityColor(), 1)
@@ -253,7 +253,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
 
              */
 
-            int textFieldIndex = (int)CustomGUILayout.CustomSyles.TextField;
+            int textFieldIndex = (int)CustomGUIUtility.CustomStyles.TextField;
 
             var textFieldNormalWorker = CreateWorker(CreateStyle(textFieldIndex, skin.textField), 16, 16)
                 .SetBorders(SystemColors.ActiveBorder.ToUnityColor(), 1)
@@ -263,9 +263,9 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
             skin.customStyles[textFieldIndex].normal.background = textFieldNormalWorker.Texture;
             skin.customStyles[textFieldIndex].normal.textColor = control.ForeColor.ToUnityColor();
 
-            // GetName(CustomGUILayout.CustomSyles.ButtonDisabled, UIState.Hover)
+            // GetName(CustomGUIUtility.CustomStyles.ButtonDisabled, UIState.Hover)
 
-            var textFieldHoverWorker = CreateWorker(GetName(CustomGUILayout.CustomSyles.TextField, UIState.Hover), 16, 16)
+            var textFieldHoverWorker = CreateWorker(GetName(CustomGUIUtility.CustomStyles.TextField, UIState.Hover), 16, 16)
                 .SetBorders(new Color32(126, 180, 234, 255), 1)
                 .Fill(SystemColors.Window.ToUnityColor())
                 .Apply();
@@ -273,7 +273,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
             skin.customStyles[textFieldIndex].hover.background = textFieldHoverWorker.Texture;
             skin.customStyles[textFieldIndex].hover.textColor = control.ForeColor.ToUnityColor();
 
-            var textFieldFocusedWorker = CreateWorker(GetName(CustomGUILayout.CustomSyles.TextField, UIState.Focused), 16, 16)
+            var textFieldFocusedWorker = CreateWorker(GetName(CustomGUIUtility.CustomStyles.TextField, UIState.Focused), 16, 16)
                 .SetBorders(new Color32(126, 180, 234, 255), 1)
                 .Fill(SystemColors.Window.ToUnityColor())
                 .Apply();
@@ -317,12 +317,12 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
             }
         }
 
-        private static string GetName(CustomGUILayout.CustomSyles customStyle, UIState state)
+        private static string GetName(CustomGUIUtility.CustomStyles customStyle, UIState state)
             => $"{customStyle}_{state}";
 
         private static string CreateStyle(int index, GUIStyle other)
         {
-            string name = ((CustomGUILayout.CustomSyles)index).ToString();
+            string name = ((CustomGUIUtility.CustomStyles)index).ToString();
 
             MySkin.customStyles[index] = new GUIStyle(other)
             {
@@ -340,7 +340,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
             skin.GetStyle(styleName).normal.textColor = textColor;
         }
 
-        public GUIStyle GetCustomStyle(CustomGUILayout.CustomSyles customStyle)
+        public GUIStyle GetCustomStyle(CustomGUIUtility.CustomStyles customStyle)
         {
             var style = skin.customStyles[(int)customStyle];
             // Debug.Log($"{customStyle} == {style.name}");

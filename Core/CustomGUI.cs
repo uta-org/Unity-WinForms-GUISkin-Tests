@@ -61,8 +61,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
             bool isToggled = instance.Toggled;
 
             var style = !isToggled || isHover
-                ? Skin?.customStyles?[(int)CustomGUIUtility.CustomSyles.ButtonDisabled]
-                : Skin?.customStyles?[(int)CustomGUIUtility.CustomSyles.ButtonEnabled];
+                ? Skin?.customStyles?[(int)CustomGUIUtility.CustomStyles.ButtonDisabled]
+                : Skin?.customStyles?[(int)CustomGUIUtility.CustomStyles.ButtonEnabled];
 
             bool @return;
             try

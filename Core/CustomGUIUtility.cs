@@ -6,7 +6,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 {
     public static class CustomGUIUtility
     {
-        public enum CustomSyles
+        public enum CustomStyles
         {
             ButtonDisabled,
             ButtonEnabled,

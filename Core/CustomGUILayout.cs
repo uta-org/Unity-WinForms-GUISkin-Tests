@@ -43,7 +43,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 
         public static GUISkin Skin { get; set; } = SkinWorker.MySkin;
 
-        public static GUIStyle PaginationStyle => Skin.customStyles[(int)CustomSyles.ButtonEnabled];
+        public static GUIStyle PaginationStyle => Skin.customStyles[(int)CustomGUIUtility.CustomStyles.ButtonEnabled];
 
         public static bool IsEditor => !ScenePlaybackDetector.IsPlaying;
 
@@ -98,8 +98,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
             bool isToggled = instance.Toggled;
 
             var style = !isToggled || isHover
-                ? Skin?.customStyles?[(int)CustomSyles.ButtonDisabled]
-                : Skin?.customStyles?[(int)CustomSyles.ButtonEnabled];
+                ? Skin?.customStyles?[(int)CustomGUIUtility.CustomStyles.ButtonDisabled]
+                : Skin?.customStyles?[(int)CustomGUIUtility.CustomStyles.ButtonEnabled];
 
             bool @return;
             try
