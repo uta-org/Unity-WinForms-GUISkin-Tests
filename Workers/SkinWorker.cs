@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using _System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using Unity.API;
 using UnityEditor;
 using UnityEngine;
 using uzLib.Lite.ExternalCode.Core;
+using uzLib.Lite.ExternalCode.Unity.Utils;
 using uzLib.Lite.ExternalCode.WinFormsSkins.Core;
 using Application = UnityEngine.Application;
 
@@ -15,6 +15,7 @@ using Application = UnityEngine.Application;
 
 namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
 {
+    [AutoInstantiate]
     public class SkinWorker : MonoSingleton<SkinWorker>
     {
         internal enum UIState
@@ -28,6 +29,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
         // TODO: Method to create a new GUISkin instance
         public static GUISkin MySkin => Instance.skin;
 
+        public static GUISkin DefaultSkin => Instance.defaultSkin;
+
         private static Dictionary<string, TextureWorker> Workers { get; } = new Dictionary<string, TextureWorker>();
 
         [SerializeField]
@@ -35,6 +38,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
 
         [SerializeField]
         private GUISkin skin;
+
+        private GUISkin defaultSkin;
 
         private Control control = new Control();
 
@@ -69,6 +74,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
         {
             Instance = this;
             skin = Instantiate(skin);
+            defaultSkin = Instantiate(skin);
 
             // Start modifying the skin
 

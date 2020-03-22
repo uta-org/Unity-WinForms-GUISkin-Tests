@@ -6,7 +6,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Examples
 {
     public class IMGUISkinExample : MonoBehaviour
     {
-        private CustomGUILayout customUI;
+        //private CustomGUILayout customUI;
 
         //[SerializeField]
         //private GUISkin skin;
@@ -17,7 +17,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Examples
         private void Start()
         {
             windowPos = new Rect(0, 0, 200, 200);
-            customUI = new CustomGUILayout(SkinWorker.MySkin);
+            //customUI = new CustomGUILayout();
         }
 
         // Update is called once per frame
@@ -36,7 +36,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Examples
             // bugfix: Rect must be specified
             GUI.DragWindow(new Rect(0, 0, windowPos.size.x, 20));
 
-            if (customUI.Button("This is a test"))
+            if (CustomGUILayout.Button("This is a test"))
             {
                 //Debug.Log("Clicked!");
             }
@@ -45,7 +45,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Examples
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    customUI.Button(i.ToString());
+                    CustomGUILayout.Button(i.ToString());
                 }
             }
             GUILayout.EndScrollView();
