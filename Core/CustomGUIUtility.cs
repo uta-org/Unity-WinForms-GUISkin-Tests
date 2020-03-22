@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using uzLib.Lite.ExternalCode.WinFormsSkins.Workers;
 
 namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 {
@@ -13,6 +14,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
             Tooltip,
             TextField
         }
+
+        public static GUIStyle PaginationStyle => SkinWorker.MySkin.customStyles[(int)CustomStyles.ButtonEnabled];
 
         public static int GetID(int altId)
         {

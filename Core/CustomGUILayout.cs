@@ -18,8 +18,6 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
     {
         public static GUISkin Skin { get; set; } = SkinWorker.MySkin;
 
-        public static GUIStyle PaginationStyle => Skin.customStyles[(int)CustomStyles.ButtonEnabled];
-
         public static bool IsEditor => !ScenePlaybackDetector.IsPlaying;
 
         public static bool Button(string text)
