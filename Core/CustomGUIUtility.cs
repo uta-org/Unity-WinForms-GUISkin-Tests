@@ -6,6 +6,14 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 {
     public static class CustomGUIUtility
     {
+        public enum CustomSyles
+        {
+            ButtonDisabled,
+            ButtonEnabled,
+            Tooltip,
+            TextField
+        }
+
         private static readonly Dictionary<int, ButtonInstance> m_ButtonInstances = new Dictionary<int, ButtonInstance>();
         private static readonly Dictionary<int, ButtonInstance> m_ButtonLayoutInstances = new Dictionary<int, ButtonInstance>();
 
@@ -20,15 +28,6 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
             GetDictionary(layoutMode).Add(id, instance);
             return GetDictionary(layoutMode)[id];
         }
-
-        //internal static bool GetToggleState(int id, bool layoutMode = true)
-        //    => GetDictionary(layoutMode)[id].Toggled;
-
-        //internal static void SetToggleState(int id, bool state, bool layoutMode = true)
-        //    => GetDictionary(layoutMode)[id].Toggled = state;
-
-        //internal static Rect GetButtonRect(int id, bool layoutMode = true)
-        //    => GetDictionary(layoutMode)[id].ButtonRect;
 
         private static Dictionary<int, ButtonInstance> GetDictionary(bool layoutMode)
             => layoutMode ? m_ButtonLayoutInstances : m_ButtonInstances;
