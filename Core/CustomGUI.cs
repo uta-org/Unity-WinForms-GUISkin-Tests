@@ -2,6 +2,7 @@
 using UnityEngine;
 using uzLib.Lite.ExternalCode.Unity.Utils;
 using uzLib.Lite.ExternalCode.WinFormsSkins.Workers;
+using static uzLib.Lite.ExternalCode.WinFormsSkins.Core.CustomGUIUtility;
 
 namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 {
@@ -10,15 +11,6 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
         public static GUISkin Skin { get; set; } = SkinWorker.MySkin;
 
         public static bool IsEditor => !ScenePlaybackDetector.IsPlaying;
-
-        private static int GetID(int altId)
-        {
-            GUI.Label(Rect.zero, string.Empty);
-
-            var id = GUIUtility.GetControlID(FocusType.Passive);
-            Debug.Log(id);
-            return id == -1 ? altId : id;
-        }
 
         public static bool Button(Rect rect, string text)
         {
@@ -55,14 +47,14 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 
             Event e = Event.current;
 
-            var instance = CustomGUIUtility.AddOrGetButtonInstance(GetID(altId));
+            var instance = AddOrGetButtonInstance(GetID(altId));
 
             bool isHover = instance.ButtonRect.Contains(e.mousePosition);
             bool isToggled = instance.Toggled;
 
             var style = !isToggled || isHover
-                ? Skin?.customStyles?[(int)CustomGUIUtility.CustomStyles.ButtonDisabled]
-                : Skin?.customStyles?[(int)CustomGUIUtility.CustomStyles.ButtonEnabled];
+                ? Skin?.customStyles?[(int)CustomStyles.ButtonDisabled]
+                : Skin?.customStyles?[(int)CustomStyles.ButtonEnabled];
 
             bool @return;
             try

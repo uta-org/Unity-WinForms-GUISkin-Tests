@@ -14,6 +14,15 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
             TextField
         }
 
+        public static int GetID(int altId)
+        {
+            GUI.Label(Rect.zero, string.Empty);
+
+            var id = GUIUtility.GetControlID(FocusType.Passive);
+            Debug.Log(id);
+            return id == -1 ? altId : id;
+        }
+
         private static readonly Dictionary<int, ButtonInstance> m_ButtonInstances = new Dictionary<int, ButtonInstance>();
         private static readonly Dictionary<int, ButtonInstance> m_ButtonLayoutInstances = new Dictionary<int, ButtonInstance>();
 

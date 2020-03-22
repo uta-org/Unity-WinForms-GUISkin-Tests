@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 using uzLib.Lite.ExternalCode.Extensions;
 using uzLib.Lite.ExternalCode.Unity.Utils;
-using uzLib.Lite.ExternalCode.Unity.Utils.Threading;
 using uzLib.Lite.ExternalCode.WinFormsSkins.Workers;
-using Object = UnityEngine.Object;
+using static uzLib.Lite.ExternalCode.WinFormsSkins.Core.CustomGUIUtility;
 
 #if !(!UNITY_2020 && !UNITY_2019 && !UNITY_2018 && !UNITY_2017 && !UNITY_5)
 
@@ -18,43 +16,11 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
     // TODO: Make it static
     public static class CustomGUILayout
     {
-        //[ThreadStatic]
-        //private static readonly bool m_IsMainThread = true;
-
-        //public CustomGUILayout()
-        //{
-        //}
-
-        //public CustomGUILayout(GUISkin other)
-        //{
-        //    if (m_IsMainThread)
-        //        Skin = Object.Instantiate(other);
-        //    else
-        //        throw new InvalidOperationException("CustomGUILayout must be called on the main thread!");
-
-        //    //// TODO: This is not working...
-        //    //Debug.LogWarning("This call was made outside of main thread, calling Dispatcher...");
-        //    //Dispatcher.Invoke(() =>
-        //    //{
-        //    //    Debug.Log("Established Skin object!");
-        //    //    Skin = Object.Instantiate(skin);
-        //    //});
-        //}
-
         public static GUISkin Skin { get; set; } = SkinWorker.MySkin;
 
-        public static GUIStyle PaginationStyle => Skin.customStyles[(int)CustomGUIUtility.CustomStyles.ButtonEnabled];
+        public static GUIStyle PaginationStyle => Skin.customStyles[(int)CustomStyles.ButtonEnabled];
 
         public static bool IsEditor => !ScenePlaybackDetector.IsPlaying;
-
-        private static int GetID(int altId)
-        {
-            GUI.Label(Rect.zero, string.Empty);
-
-            var id = GUIUtility.GetControlID(FocusType.Passive);
-            Debug.Log(id);
-            return id == -1 ? altId : id;
-        }
 
         public static bool Button(string text)
         {
@@ -92,14 +58,14 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 
             Event e = Event.current;
 
-            var instance = CustomGUIUtility.AddOrGetButtonInstance(GetID(altId));
+            var instance = AddOrGetButtonInstance(GetID(altId));
 
             bool isHover = instance.ButtonRect.Contains(e.mousePosition);
             bool isToggled = instance.Toggled;
 
             var style = !isToggled || isHover
-                ? Skin?.customStyles?[(int)CustomGUIUtility.CustomStyles.ButtonDisabled]
-                : Skin?.customStyles?[(int)CustomGUIUtility.CustomStyles.ButtonEnabled];
+                ? Skin?.customStyles?[(int)CustomStyles.ButtonDisabled]
+                : Skin?.customStyles?[(int)CustomStyles.ButtonEnabled];
 
             bool @return;
             try
