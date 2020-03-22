@@ -17,13 +17,37 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 
         public static GUIStyle PaginationStyle => SkinWorker.MySkin.customStyles[(int)CustomStyles.ButtonEnabled];
 
-        public static int GetID(int altId)
+        private static HashSet<int> m_IDs = new HashSet<int>();
+        private static System.Random m_Random = new System.Random();
+
+        public static int GetID(ref int altId)
         {
             GUI.Label(Rect.zero, string.Empty);
 
             var id = GUIUtility.GetControlID(FocusType.Passive);
-            Debug.Log(id);
-            return id == -1 ? altId : id;
+            var invalidId = id == -1;
+            var realId = invalidId ? altId : id;
+
+            if (!m_IDs.Add(altId))
+            {
+                altId = GetFreeId();
+                if (invalidId) realId = altId;
+            }
+
+            //Debug.Log(id + " " + realId);
+            return realId;
+        }
+
+        private static int GetFreeId()
+        {
+            int id = m_Random.Next();
+
+            while (!m_IDs.Add(id))
+            {
+                id = m_Random.Next();
+            }
+
+            return id;
         }
 
         private static readonly Dictionary<int, ButtonInstance> m_ButtonInstances = new Dictionary<int, ButtonInstance>();
@@ -50,6 +74,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
             public bool Toggled { get; set; }
             public Rect ButtonRect { get; set; }
 
+            // ReSharper disable once UnusedMember.Local
             private ButtonInstance()
             {
             }

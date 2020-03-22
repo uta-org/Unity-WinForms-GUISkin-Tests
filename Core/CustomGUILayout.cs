@@ -1,13 +1,16 @@
 ﻿using System;
 using UnityEngine;
-using uzLib.Lite.ExternalCode.Extensions;
 using uzLib.Lite.ExternalCode.Unity.Utils;
 using uzLib.Lite.ExternalCode.WinFormsSkins.Workers;
 using static uzLib.Lite.ExternalCode.WinFormsSkins.Core.CustomGUIUtility;
 
 #if !(!UNITY_2020 && !UNITY_2019 && !UNITY_2018 && !UNITY_2017 && !UNITY_5)
 
-using uzLib.Lite.Core;
+using uzLib.Lite.Extensions;
+
+#else
+
+using uzLib.Lite.ExternalCode.Extensions;
 
 #endif
 
@@ -27,12 +30,13 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 
         public static bool Button(string text, params GUILayoutOption[] options)
         {
-            return Button(text, -1, null, options);
+            int @ref = -1;
+            return Button(text, ref @ref, null, options);
         }
 
-        public static bool Button(string text, int altId, params GUILayoutOption[] options)
+        public static bool Button(string text, ref int altId, params GUILayoutOption[] options)
         {
-            return Button(text, altId, null, options);
+            return Button(text, ref altId, null, options);
         }
 
         public static bool Button(string text, Func<GUIStyle, GUIStyle> transformStyle)
@@ -42,21 +46,22 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 
         public static bool Button(string text, Func<GUIStyle, GUIStyle> transformStyle, params GUILayoutOption[] options)
         {
-            return Button(text, -1, transformStyle, options);
+            int @ref = -1;
+            return Button(text, ref @ref, transformStyle, options);
         }
 
-        public static bool Button(string text, int altId, Func<GUIStyle, GUIStyle> transformStyle,
+        public static bool Button(string text, ref int altId, Func<GUIStyle, GUIStyle> transformStyle,
             params GUILayoutOption[] options)
-            => Button(new GUIContent(text), altId, transformStyle, options);
+            => Button(new GUIContent(text), ref altId, transformStyle, options);
 
-        public static bool Button(GUIContent content, int altId, Func<GUIStyle, GUIStyle> transformStyle, params GUILayoutOption[] options)
+        public static bool Button(GUIContent content, ref int altId, Func<GUIStyle, GUIStyle> transformStyle, params GUILayoutOption[] options)
         {
             if (IsEditor)
                 return GUILayout.Button(content, options);
 
             Event e = Event.current;
 
-            var instance = AddOrGetButtonInstance(GetID(altId));
+            var instance = AddOrGetButtonInstance(GetID(ref altId));
 
             bool isHover = instance.ButtonRect.Contains(e.mousePosition);
             bool isToggled = instance.Toggled;

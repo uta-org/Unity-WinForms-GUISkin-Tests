@@ -14,12 +14,13 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 
         public static bool Button(Rect rect, string text)
         {
-            return Button(rect, text, -1, null);
+            int @ref = -1;
+            return Button(rect, text, ref @ref, null);
         }
 
-        public static bool Button(Rect rect, string text, int altId)
+        public static bool Button(Rect rect, string text, ref int altId)
         {
-            return Button(rect, text, altId, null);
+            return Button(rect, text, ref altId, null);
         }
 
         public static bool Button(Rect rect, string text, Func<GUIStyle, GUIStyle> transformStyle)
@@ -27,8 +28,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
             return Button(rect, text, transformStyle);
         }
 
-        public static bool Button(Rect rect, string text, int altId, Func<GUIStyle, GUIStyle> transformStyle)
-                   => Button(rect, new GUIContent(text), altId, transformStyle);
+        public static bool Button(Rect rect, string text, ref int altId, Func<GUIStyle, GUIStyle> transformStyle)
+                   => Button(rect, new GUIContent(text), ref altId, transformStyle);
 
         public static bool Button(Rect rect, GUIContent content)
         {
@@ -37,17 +38,18 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 
         public static bool Button(Rect rect, GUIContent content, Func<GUIStyle, GUIStyle> transformStyle)
         {
-            return Button(rect, content, 0, transformStyle);
+            int @ref = -1;
+            return Button(rect, content, ref @ref, transformStyle);
         }
 
-        public static bool Button(Rect rect, GUIContent content, int altId, Func<GUIStyle, GUIStyle> transformStyle)
+        public static bool Button(Rect rect, GUIContent content, ref int altId, Func<GUIStyle, GUIStyle> transformStyle)
         {
             if (IsEditor)
                 return GUI.Button(rect, content);
 
             Event e = Event.current;
 
-            var instance = AddOrGetButtonInstance(GetID(altId));
+            var instance = AddOrGetButtonInstance(GetID(ref altId));
 
             bool isHover = instance.ButtonRect.Contains(e.mousePosition);
             bool isToggled = instance.Toggled;
