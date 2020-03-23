@@ -1,17 +1,21 @@
-﻿using System;
+﻿using _System.Drawing;
+using System;
 using System.Collections.Generic;
-using _System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Unity.API;
-using UnityEditor;
+
 using UnityEngine;
 using uzLib.Lite.ExternalCode.Core;
 using uzLib.Lite.ExternalCode.Unity.Utils;
 using uzLib.Lite.ExternalCode.WinFormsSkins.Core;
 using Application = UnityEngine.Application;
 
-// using System.Linq;
+#if UNITY_EDITOR
+
+using UnityEditor;
+
+#endif
 
 namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
 {
@@ -26,8 +30,10 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
             Focused
         }
 
+        private static GUISkin editorSkin;
+
         // TODO: Method to create a new GUISkin instance
-        public static GUISkin MySkin => Instance.skin;
+        public static GUISkin MySkin => ScenePlaybackDetector.IsPlaying ? Instance.skin : GetSkinForEditor();
 
         public static GUISkin DefaultSkin => Instance.defaultSkin;
 
@@ -41,7 +47,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
 
         private GUISkin defaultSkin;
 
-        private Control control = new Control();
+        private readonly Control control = new Control();
 
         public static GUIStyle TextFieldStyle =>
             Instance.skin.customStyles[(int)CustomGUIUtility.CustomStyles.TextField];
@@ -49,6 +55,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
         [MenuItem("Window/Get Builtin skin...")]
         public static void GetSkin()
         {
+#if UNITY_EDITOR
             string dir = Path.Combine(Application.dataPath, "Resources", "Saved Skins/");
 
             if (!Directory.Exists(dir))
@@ -68,6 +75,20 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
             }
             EditorUtility.DisplayDialog("API Message",
                 $"GUI Skin saved in 'Saved Skins' folder all {values.Length} scripts with names: ({string.Join(", ", enums.ToArray())})!", "Ok");
+#endif
+        }
+
+        public static GUISkin GetSkinForEditor()
+        {
+#if UNITY_EDITOR
+            if (editorSkin != null)
+                return editorSkin;
+
+            editorSkin = Instantiate(EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene));
+            return editorSkin;
+#else
+            return null;
+#endif
         }
 
         private void Awake()
@@ -89,7 +110,12 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
             Array.Copy(skin.customStyles, copy, skin.customStyles.Length);
 
             int enumLength = Enum.GetNames(typeof(CustomGUIUtility.CustomStyles)).Length;
-            skin.customStyles = new GUIStyle[enumLength + skin.customStyles.Length];
+
+            int length = enumLength + skin.customStyles.Length;
+            skin.customStyles = new GUIStyle[length];
+
+            for (int i = 0; i < length; i++)
+                skin.customStyles[i] = new GUIStyle();
 
             // Start Button disabled
             var buttonDisabledWorkerNormal = CreateWorker(CreateStyle(buttonDisabledStyleIndex, skin.button), 16, 16)
@@ -324,7 +350,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
         {
             string name = ((CustomGUIUtility.CustomStyles)index).ToString();
 
-            MySkin.customStyles[index] = new GUIStyle(other)
+            Instance.skin.customStyles[index] = new GUIStyle(other)
             {
                 name = name
             };

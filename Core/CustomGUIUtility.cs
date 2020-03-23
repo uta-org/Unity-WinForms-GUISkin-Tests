@@ -20,6 +20,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
         private static HashSet<int> m_IDs = new HashSet<int>();
         private static System.Random m_Random = new System.Random();
 
+        public static int IdCount => m_IDs.Count;
+
         public static int GetID(ref int altId)
         {
             GUI.Label(Rect.zero, string.Empty);
@@ -28,10 +30,18 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
             var invalidId = id == -1;
             var realId = invalidId ? altId : id;
 
-            if (!m_IDs.Add(altId))
+            if (invalidId)
             {
+                if (m_IDs.Contains(altId) && altId > -1)
+                    return altId;
+
                 altId = GetFreeId();
-                if (invalidId) realId = altId;
+                realId = altId;
+            }
+            else
+            {
+                if (!m_IDs.Contains(id))
+                    m_IDs.Add(id);
             }
 
             //Debug.Log(id + " " + realId);
@@ -40,13 +50,9 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 
         private static int GetFreeId()
         {
-            int id = m_Random.Next();
-
+            var id = m_Random.Next();
             while (!m_IDs.Add(id))
-            {
                 id = m_Random.Next();
-            }
-
             return id;
         }
 
