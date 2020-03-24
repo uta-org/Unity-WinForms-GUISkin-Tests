@@ -33,7 +33,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
         private static GUISkin editorSkin;
 
         // TODO: Method to create a new GUISkin instance
-        public static GUISkin MySkin => ScenePlaybackDetector.IsPlaying ? Instance.skin : GetSkinForEditor();
+        // If Instance?.skin == null, we are still on the Editor, so we will force GetSkinForEditor method
+        public static GUISkin MySkin => (ScenePlaybackDetector.IsPlaying ? Instance?.skin : GetSkinForEditor()) ?? GetSkinForEditor();
 
         public static GUISkin DefaultSkin => Instance.defaultSkin;
 
@@ -48,9 +49,6 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
         private GUISkin defaultSkin;
 
         private readonly Control control = new Control();
-
-        public static GUIStyle TextFieldStyle =>
-            Instance.skin.customStyles[(int)CustomGUIUtility.CustomStyles.TextField];
 
         [MenuItem("Window/Get Builtin skin...")]
         public static void GetSkin()
@@ -279,33 +277,33 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
 
              */
 
-            int textFieldIndex = (int)CustomGUIUtility.CustomStyles.TextField;
+            //int textFieldIndex = (int)CustomGUIUtility.CustomStyles.TextField;
 
-            var textFieldNormalWorker = CreateWorker(CreateStyle(textFieldIndex, skin.textField), 16, 16)
+            var textFieldNormalWorker = CreateWorker("textField", 16, 16)
                 .SetBorders(SystemColors.ActiveBorder.ToUnityColor(), 1)
                 .Fill(SystemColors.Window.ToUnityColor())
                 .Apply();
 
-            skin.customStyles[textFieldIndex].normal.background = textFieldNormalWorker.Texture;
-            skin.customStyles[textFieldIndex].normal.textColor = control.ForeColor.ToUnityColor();
+            skin.textField.normal.background = textFieldNormalWorker.Texture;
+            skin.textField.normal.textColor = control.ForeColor.ToUnityColor();
 
             // GetName(CustomGUIUtility.CustomStyles.ButtonDisabled, UIState.Hover)
 
-            var textFieldHoverWorker = CreateWorker(GetName(CustomGUIUtility.CustomStyles.TextField, UIState.Hover), 16, 16)
+            var textFieldHoverWorker = CreateWorker("textFieldHover", 16, 16)
                 .SetBorders(new Color32(126, 180, 234, 255), 1)
                 .Fill(SystemColors.Window.ToUnityColor())
                 .Apply();
 
-            skin.customStyles[textFieldIndex].hover.background = textFieldHoverWorker.Texture;
-            skin.customStyles[textFieldIndex].hover.textColor = control.ForeColor.ToUnityColor();
+            skin.textField.hover.background = textFieldHoverWorker.Texture;
+            skin.textField.hover.textColor = control.ForeColor.ToUnityColor();
 
-            var textFieldFocusedWorker = CreateWorker(GetName(CustomGUIUtility.CustomStyles.TextField, UIState.Focused), 16, 16)
+            var textFieldFocusedWorker = CreateWorker("textFieldFocused", 16, 16)
                 .SetBorders(new Color32(126, 180, 234, 255), 1)
                 .Fill(SystemColors.Window.ToUnityColor())
                 .Apply();
 
-            skin.customStyles[textFieldIndex].focused.background = textFieldFocusedWorker.Texture;
-            skin.customStyles[textFieldIndex].focused.textColor = control.ForeColor.ToUnityColor();
+            skin.textField.focused.background = textFieldFocusedWorker.Texture;
+            skin.textField.focused.textColor = control.ForeColor.ToUnityColor();
 
             // End TextField
 

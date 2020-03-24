@@ -11,8 +11,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
         {
             ButtonDisabled,
             ButtonEnabled,
-            Tooltip,
-            TextField
+            Tooltip
         }
 
         public static GUIStyle PaginationStyle => SkinWorker.MySkin.customStyles[(int)CustomStyles.ButtonEnabled];
