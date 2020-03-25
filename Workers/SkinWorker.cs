@@ -36,7 +36,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
         // If Instance?.skin == null, we are still on the Editor, so we will force GetSkinForEditor method
         public static GUISkin MySkin => (ScenePlaybackDetector.IsPlaying ? Instance?.skin : GetSkinForEditor()) ?? GetSkinForEditor();
 
-        public static GUISkin DefaultSkin => Instance.defaultSkin;
+        // Not needed by the moment, editor skin is used in MySkin
+        // public static GUISkin DefaultSkin => Instance.defaultSkin;
 
         private static Dictionary<string, TextureWorker> Workers { get; } = new Dictionary<string, TextureWorker>();
 
@@ -46,7 +47,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
         [SerializeField]
         private GUISkin skin;
 
-        private GUISkin defaultSkin;
+        // private GUISkin defaultSkin;
 
         private readonly Control control = new Control();
 
@@ -93,7 +94,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
         {
             Instance = this;
             skin = Instantiate(skin);
-            defaultSkin = Instantiate(skin);
+            // defaultSkin = Instantiate(skin);
 
             // Start modifying the skin
 
