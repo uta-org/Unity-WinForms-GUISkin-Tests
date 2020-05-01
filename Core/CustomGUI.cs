@@ -12,10 +12,21 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Core
 
         public static bool IsEditor => !ScenePlaybackDetector.IsPlaying;
 
+        private static GUIStyle GetStyleForColor(GUIStyle style, Color color)
+        {
+            return new GUIStyle(style) { normal = new GUIStyleState { textColor = color } };
+        }
+
         public static bool Button(Rect rect, string text)
         {
             int @ref = -1;
             return Button(rect, text, ref @ref, null);
+        }
+
+        public static bool Button(Rect rect, string text, Color textColor)
+        {
+            int @ref = -1;
+            return Button(rect, text, ref @ref, style => GetStyleForColor(style, textColor));
         }
 
         public static bool Button(Rect rect, string text, ref int altId)

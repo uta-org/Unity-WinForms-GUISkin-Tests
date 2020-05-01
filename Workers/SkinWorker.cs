@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using Unity.API;
-
 using UnityEngine;
 using uzLib.Lite.ExternalCode.Core;
 using uzLib.Lite.ExternalCode.Unity.Utils;
@@ -183,7 +182,7 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
 
             var boxWorker = CreateWorker("BoxNormal", 16, 16)
                 .SetBorders(SystemColors.ActiveBorder.ToUnityColor(), 1)
-                .Fill(UnityEngine.Color.clear)
+                .Fill(SystemColors.Control.ToUnityColor()) // TODO: Color.clear?
                 .Apply();
 
             skin.box.normal.background = boxWorker.Texture;
