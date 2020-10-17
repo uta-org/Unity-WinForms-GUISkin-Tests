@@ -60,7 +60,10 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
 
         private readonly Control control = new Control();
 
+#if UNITY_EDITOR
+
         [MenuItem("Window/Get Builtin skin...")]
+#endif
         public static void GetSkin()
         {
 #if UNITY_EDITOR
@@ -83,6 +86,8 @@ namespace uzLib.Lite.ExternalCode.WinFormsSkins.Workers
             }
             EditorUtility.DisplayDialog("API Message",
                 $"GUI Skin saved in 'Saved Skins' folder all {values.Length} scripts with names: ({string.Join(", ", enums.ToArray())})!", "Ok");
+#else
+            throw new NotImplementedException();
 #endif
         }
 
