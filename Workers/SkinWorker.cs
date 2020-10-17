@@ -1,11 +1,11 @@
-﻿using _System.Drawing;
+﻿// ReSharper disable RedundantUsingDirective
+using _System.Drawing;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using Unity.API;
 using UnityEngine;
-using uzLib.Lite.ExternalCode.Core;
 using uzLib.Lite.ExternalCode.Unity.Utils;
 using uzLib.Lite.ExternalCode.WinFormsSkins.Core;
 using Application = UnityEngine.Application;
@@ -13,6 +13,16 @@ using Application = UnityEngine.Application;
 #if UNITY_EDITOR
 
 using UnityEditor;
+
+#endif
+
+#if UNITY_2020 || UNITY_2019 || UNITY_2018 || UNITY_2017 || UNITY_5
+
+using UnityEngine.Core;
+
+#else
+
+using uzLib.Lite.ExternalCode.Core;
 
 #endif
 
